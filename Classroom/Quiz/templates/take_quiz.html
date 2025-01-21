@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take the Quiz - Shaymaa's English Classes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7fa;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        h1, h2, p {
+            margin: 0;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 0;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background-color: #e0f7fa; /* Darker light blue */
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar .logo {
+            color: #f4a261;
+            font-size: 1.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-left: 20px;
+        }
+
+        .navbar ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            gap: 30px;
+            margin: 0;
+        }
+
+        .navbar ul li {
+            display: inline-block;
+        }
+
+        .navbar ul li a {
+            color: #333;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            padding: 10px 20px;
+            border-radius: 30px;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar ul li a:hover {
+            background-color: #f4a261;
+            color: #fff;
+        }
+        .form-group textarea {
+    padding: 20px;
+    font-size: 1.5rem;  /* Slightly larger font size for easier reading */
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    overflow: scroll;
+    height: 500px;  /* Increased height */
+    box-sizing: border-box;
+    margin-top: 5px;
+    resize: none;  /* Disable resizing */
+}
+
+.form-group textarea:focus {
+    outline: none;
+    border-color: #f4a261;
+}
+        /* Quiz Section */
+        .quiz-section {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+            animation: fadeIn 1.5s forwards;
+        }
+
+        .quiz-section h1 {
+            font-size: 2.5rem;
+            color: #293241;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .quiz-section p.description {
+            font-size: 1.5rem;
+            color: #444;
+            margin-bottom: 30px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-left: 5px solid #f4a261;
+            border-radius: 5px;
+        }
+
+        .quiz-section form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .quiz-section form .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .form-group label {
+            font-size: 1.2rem;
+            color: #293241;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            width: 100%;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #f4a261;
+        }
+        
+
+        button {
+            background-color: #f4a261;
+            color: white;
+            padding: 15px 30px;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            align-self: flex-start;
+        }
+
+        button:hover {
+            background-color: #e76f51;
+        }
+        .error-message {
+    background-color: #ffdddd; /* Light red background */
+    color: #d8000c; /* Red text */
+    border: 1px solid #d8000c;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+        /* Loading Spinner */
+        .loader {
+            border: 5px solid #f3f3f3; /* Light gray */
+            border-top: 5px solid #f4a261; /* Orange color */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        /* Loading Screen */
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            display: none; /* Initially hidden */
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        #loading-overlay h2 {
+            color: white;
+            font-size: 1.5rem;
+            margin-top: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Mobile Navbar */
+        .navbar .menu-toggle {
+            display: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .navbar ul {
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+                margin-top: 20px;
+                padding: 10px;
+            }
+
+            .navbar ul li {
+                display: block;
+            }
+
+            .navbar .menu-toggle {
+                display: block;
+            }
+
+            .navbar ul.active {
+                display: flex;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Navbar Section -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">Shaymaa's Classes</div>
+            <div class="menu-toggle" id="menu-toggle">
+                <i class="fa fa-bars"></i>
+            </div>
+            <ul id="navbar-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/quiz">Take the Quiz</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="/login">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section class="quiz-section">
+            <h1>{{ quiz.title }}</h1>
+            <p class="description">{{ quiz.description }}</p>
+            {% if error %}
+            <div class="error-message" style="color: red; font-weight: bold; margin-bottom: 20px;">
+                {{ error }}
+            </div>
+        {% endif %}
+            <form method="post" id="quiz-form" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input type="file" name="image" accept="image/*">
+              </div>
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay">
+        <div class="loader"></div>
+        <h2>Hold tight! Your essay is being graded...</h2>
+    </div>
+
+    <script>
+        // Toggle navbar menu on mobile
+        const menuToggle = document.getElementById('menu-toggle');
+        const navbarLinks = document.getElementById('navbar-links');
+
+        menuToggle.addEventListener('click', () => {
+            navbarLinks.classList.toggle('active');
+        });
+
+        // Handle form submission and show loading screen
+        const form = document.getElementById('quiz-form');
+        const loadingOverlay = document.getElementById('loading-overlay');
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();  // Prevent form from submitting immediately
+            loadingOverlay.style.display = 'flex';  // Show loading overlay
+
+            // Simulate an AJAX submission with a timeout (you can replace this with actual AJAX logic)
+            setTimeout(function() {
+                form.submit();  // Submit the form after the "loading" animation is complete
+            }, 3000); // Simulate a 3-second delay
+        });
+    </script>
+</body>
+</html>
