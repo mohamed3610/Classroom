@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Signup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f4f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    /* Signup Container */
+    .signup-container {
+      background-color: #fff;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+    }
+
+    .signup-container h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #293241;
+      font-weight: 600;
+    }
+
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 5px;
+    }
+
+    .form-group label.required::after {
+      content: " *";
+      color: #e76f51;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .form-group input:focus {
+      border-color: #f4a261;
+      box-shadow: 0 0 5px rgba(244, 162, 97, 0.5);
+      outline: none;
+    }
+
+    .form-group input::placeholder {
+      color: #999;
+    }
+
+    .errorlist {
+      color: #e76f51;
+      font-size: 0.8rem;
+      margin-top: 5px;
+      list-style: none;
+      padding: 0;
+    }
+
+    /* Button Styles */
+    .signup-button {
+      background-color: #f4a261;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s ease;
+    }
+
+    .signup-button:hover {
+      background-color: #e76f51;
+    }
+
+    /* Link Styles */
+    .login-link {
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .login-link a {
+      color: #f4a261;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .login-link a:hover {
+      color: #e76f51;
+      text-decoration: underline;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 480px) {
+      .signup-container {
+        padding: 20px;
+      }
+
+      .signup-container h1 {
+        font-size: 1.5rem;
+      }
+
+      .form-group input {
+        padding: 10px;
+      }
+
+      .signup-button {
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="signup-container">
+    <h1>Student Signup</h1>
+    <form method="post">
+      {% csrf_token %}
+      <!-- Username -->
+      <div class="form-group">
+        <label for="{{ form.username.id_for_label }}" class="required">Username</label>
+        {{ form.username }}
+        {{ form.username.errors }}
+      </div>
+      <!-- Email -->
+      <div class="form-group">
+        <label for="{{ form.email.id_for_label }}" class="required">Email</label>
+        {{ form.email }}
+        {{ form.email.errors }}
+      </div>
+      <!-- Password -->
+      <div class="form-group">
+        <label for="{{ form.password1.id_for_label }}" class="required">Password</label>
+        {{ form.password1 }}
+        {{ form.password1.errors }}
+      </div>
+      <!-- Confirm Password -->
+      <div class="form-group">
+        <label for="{{ form.password2.id_for_label }}" class="required">Confirm Password</label>
+        {{ form.password2 }}
+        {{ form.password2.errors }}
+      </div>
+      <!-- Guardian Name -->
+      <div class="form-group">
+        <label for="{{ form.guardian_name.id_for_label }}" class="required">Guardian Name</label>
+        {{ form.guardian_name }}
+        {{ form.guardian_name.errors }}
+      </div>
+      <!-- Guardian Relationship -->
+      <div class="form-group">
+        <label for="{{ form.guardian_relationship.id_for_label }}" class="required">Guardian Relationship</label>
+        {{ form.guardian_relationship }}
+        {{ form.guardian_relationship.errors }}
+      </div>
+      <!-- Guardian Email -->
+      <div class="form-group">
+        <label for="{{ form.guardian_email.id_for_label }}" class="required">Guardian Email</label>
+        {{ form.guardian_email }}
+        {{ form.guardian_email.errors }}
+      </div>
+      <!-- Guardian Phone Number -->
+      <div class="form-group">
+        <label for="{{ form.guardian_phone_number.id_for_label }}" class="required">Guardian Phone Number</label>
+        {{ form.guardian_phone_number }}
+        {{ form.guardian_phone_number.errors }}
+      </div>
+      <!-- Guardian WhatsApp Number -->
+      <div class="form-group">
+        <label for="{{ form.guardian_whatsapp_number.id_for_label }}" class="required">Guardian WhatsApp Number</label>
+        {{ form.guardian_whatsapp_number }}
+        {{ form.guardian_whatsapp_number.errors }}
+      </div>
+      <!-- Guardian Alternate Number -->
+      <div class="form-group">
+        <label for="{{ form.guardian_alternate_number.id_for_label }}">Guardian Alternate Number</label>
+        {{ form.guardian_alternate_number }}
+        {{ form.guardian_alternate_number.errors }}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.bank_statement.id_for_label }}">Bank statement for payment</label>
+        {{ form.bank_statement }}
+        {{ form.bank_statement.errors }}
+      </div>
+      <!-- Submit Button -->
+      <button type="submit" class="signup-button">Sign Up</button>
+    </form>
+    <p class="login-link">Already have an account? <a href="{% url 'login' %}">Login</a></p>
+  </div>
+</body>
+</html>

@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Shaymaa's English Classes</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css" rel="stylesheet"> <!-- For icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
     /* General Styles */
     body {
@@ -23,7 +23,7 @@
     }
 
     .container {
-      width: 80%;
+      width: 90%;
       max-width: 1200px;
       margin: 0 auto;
       padding: 40px 0;
@@ -37,20 +37,12 @@
       justify-content: center;
       background: linear-gradient(135deg, #293241, #3f4c61);
       color: #fff;
-      padding: 80px 0;
-      border-radius: 10px;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-      background-size: cover;
-      background-position: center;
+      padding: 100px 20px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      text-align: center;
       opacity: 0;
       animation: fadeIn 1.5s forwards;
-    }
-
-    .hero-text {
-      text-align: center;
-      padding: 20px;
-      max-width: 80%;
-      margin-bottom: 20px;
     }
 
     .hero-text h1 {
@@ -75,22 +67,23 @@
       font-size: 1rem;
       cursor: pointer;
       text-decoration: none;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.3s ease;
     }
 
     .cta-button:hover {
       background-color: #e76f51;
+      transform: translateY(-5px);
     }
 
     .hero-image {
-        max-width: 20%; /* Keep the image size smaller */
-        height: auto;
-        border-radius: 10px;
-        margin-top: 2px;
-        object-fit: cover; /* Ensures the image scales properly */
+      max-width: 20%;
+      height: auto;
+      border-radius: 10px;
+      margin-top: 20px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     }
 
-    /* Score and School Section */
+    /* Scores Section */
     .scores {
       display: flex;
       justify-content: space-between;
@@ -102,16 +95,17 @@
 
     .score-card {
       background-color: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       text-align: center;
       flex: 1;
-      transition: transform 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .score-card:hover {
       transform: translateY(-10px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     }
 
     .score-card h3 {
@@ -122,7 +116,7 @@
     }
 
     .score-card p {
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       color: #7a7a7a;
     }
 
@@ -130,9 +124,9 @@
     .schools {
       background-color: #fff;
       padding: 40px;
-      border-radius: 10px;
+      border-radius: 15px;
       margin-top: 50px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       opacity: 0;
       animation: fadeIn 1.5s 0.5s forwards;
     }
@@ -158,20 +152,21 @@
       font-size: 1.2rem;
       flex: 1 1 200px;
       text-align: center;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.3s ease;
     }
 
     .school-item:hover {
       background-color: #f1faee;
+      transform: translateY(-5px);
     }
 
-    /* Student Testimony Section */
+    /* Testimonials Section */
     .testimonies {
       background-color: #fff;
       padding: 40px;
-      border-radius: 10px;
+      border-radius: 15px;
       margin-top: 50px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       opacity: 0;
       animation: fadeIn 1.5s 1s forwards;
     }
@@ -197,11 +192,12 @@
       font-size: 1.2rem;
       flex: 1 1 200px;
       text-align: center;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.3s ease;
     }
 
     .testimonial-item:hover {
       background-color: #f1faee;
+      transform: translateY(-5px);
     }
 
     /* AI Assistance Section */
@@ -218,16 +214,16 @@
     .ai-card {
       background-color: #fff;
       padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       text-align: center;
       flex: 1 1 300px;
-      transition: transform 0.3s ease;
-      position: relative;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .ai-card:hover {
       transform: translateY(-10px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     }
 
     .ai-card h3 {
@@ -257,8 +253,10 @@
     .contact {
       background-color: #293241;
       color: #fff;
-      padding: 60px 0;
+      padding: 60px 20px;
       text-align: center;
+      border-radius: 15px;
+      margin-top: 50px;
       opacity: 0;
       animation: fadeIn 1.5s 1s forwards;
     }
@@ -284,11 +282,12 @@
       font-size: 1rem;
       cursor: pointer;
       text-decoration: none;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.3s ease;
     }
 
     .contact-button:hover {
       background-color: #e76f51;
+      transform: translateY(-5px);
     }
 
     /* Footer */
@@ -313,11 +312,6 @@
 
     /* Media Queries */
     @media (max-width: 768px) {
-      .hero {
-        flex-direction: column;
-        padding: 60px 20px;
-      }
-
       .hero-text h1 {
         font-size: 2.5rem;
       }
@@ -328,25 +322,18 @@
 
       .hero-image {
         max-width: 80%;
-        margin-top: 20px;
       }
 
-      .scores {
+      .scores, .ai-assistance {
         flex-direction: column;
-        align-items: center;
       }
 
-      .score-card {
-        flex: 1 1 100%;
+      .score-card, .ai-card {
         margin-bottom: 20px;
       }
 
-      .school-item, .testimonial-item, .ai-card {
+      .school-item, .testimonial-item {
         flex: 1 1 100%;
-      }
-
-      .contact-button {
-        width: 100%;
       }
     }
   </style>
@@ -358,9 +345,9 @@
       <div class="hero-text">
         <h1>Shaymaa's English Classes</h1>
         <p>Master English with personalized lessons and expert guidance. Start today and take the first step towards fluency!</p>
-        <a href="#contact" class="cta-button">Get Started</a>
+        <a href="{% url 'login' %}" class="cta-button">Login to get started</a>
       </div>
-      <img src="./../shaymaa-Photoroom (1).png" alt="Hero Image" class="hero-image">
+      <!-- <img src="./../shaymaa-Photoroom (1).png" alt="Hero Image" class="hero-image"> -->
     </section>
 
     <!-- Scores Section -->
@@ -402,12 +389,12 @@
     <!-- AI Assistance Section -->
     <section class="ai-assistance">
       <div class="ai-card">
-        <i class="fa fa-book"></i>
+        <i class="fas fa-book"></i>
         <h3>AI-Assisted Learning</h3>
         <p>Benefit from personalized AI feedback on your writing and language use.</p>
       </div>
       <div class="ai-card">
-        <i class="fa fa-graduation-cap"></i>
+        <i class="fas fa-graduation-cap"></i>
         <h3>Track Your Progress</h3>
         <p>Stay on top of your learning journey with AI-powered progress tracking.</p>
       </div>

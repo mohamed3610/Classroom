@@ -1,34 +1,52 @@
 from django.db import models
-
 from django.contrib.auth.models import AbstractUser
-import uuid
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from cms.models import Grades
+class Class(models.Model):
+    name = models.CharField(max_length=100, unique=True)
 
+    def __str__(self):
+        return self.name
 class CustomUser(AbstractUser):
-    USER_TYPE_CHOICES = (
-        ('superuser', 'SuperUser'),
-        ('teacher', 'Teacher'),
-        ('student', 'Student'),
-    )
-    
-    user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES, default='student')
-    device_count = models.PositiveIntegerField(default=0)  # For tracking student device usage
+    is_teacher = models.BooleanField(default=False)
+    is_ta = models.BooleanField(default=False)
+    is_student = models.BooleanField(default=False)  # Add this field
 
     def __str__(self):
         return self.username
 
-    # Check if the user is a student and device limit is reached
-    def can_login_from_device(self):
-        if self.user_type == 'student' and self.device_count >= 2:
-            return False
-        return True
+
+class Student(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True, related_name='student_profile')
+    guardian_name = models.CharField(max_length=40)
+    guardian_relationship = models.CharField(max_length=50)
+    guardian_email = models.EmailField()
+    guardian_phone_number = models.CharField(max_length=15)
+    guardian_whatsapp_number = models.CharField(max_length=15)
+    guardian_alternate_number = models.CharField(max_length=15, blank=True, null=True)
+    student_class = models.ForeignKey(Class, on_delete=models.SET_NULL, null=True, blank=True, related_name='students')
+    bank_statement = models.FileField(upload_to='bank_statements/', null=True, blank=True)
+    is_bank_statement_submitted = models.BooleanField(default=False)
+    is_enrolled = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.user.username
+    
 
 
 class Device(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='devices')
     device_id = models.CharField(max_length=255, unique=True)
     last_login = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.user.username} - {self.device_id}"
     
+
+
+
+
+
+
 

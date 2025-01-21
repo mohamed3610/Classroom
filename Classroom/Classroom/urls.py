@@ -22,4 +22,5 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('Quiz.urls')),
+    path('auth/' , include('Users.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
