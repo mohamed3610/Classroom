@@ -1,8 +1,8 @@
 # users/admin.py
 from django.contrib import admin
-from .models import CustomUser, Student, Class, CourseMaterial, Grades, Device
+from .models import CustomUser, Student, Class, Grades, Device
 from django.db.models import Exists, OuterRef
-
+from cms.models import CourseMaterial
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
     list_display = ('username', 'email', 'is_teacher', 'is_ta', 'is_student')
