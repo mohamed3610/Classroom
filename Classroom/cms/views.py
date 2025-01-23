@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import CourseMaterial
 from Users.models import Student
-
+from.models import Grades
 @login_required
 def student_cms(request):
     try:
@@ -34,3 +34,48 @@ def student_cms(request):
     }
 
     return render(request, 'cms/student_cms.html', context)
+
+
+@login_required
+def grades_page(request):
+    try:
+        # Get the student profile
+        student = request.user.student_profile
+    except Student.DoesNotExist:
+        return redirect('landing_page')  # Redirect if the student profile doesn't exist
+
+    # Check if the student is enrolled
+    if not student.is_enrolled:
+        return redirect('landing_page')  # Redirect unenrolled students to the landing page
+
+    # Get the student's grades
+    grades = Grades.objects.filter(student=student)
+
+    context = {
+        'student': student,
+        'grades': grades,
+    }
+
+    return render(request, 'cms/grades_page.html', context)
+
+@login_required
+def quizzes_page(request):
+    try:
+        # Get the student profile
+        student = request.user.student_profile
+    except Student.DoesNotExist:
+        return redirect('landing_page')  # Redirect if the student profile doesn't exist
+
+    # Check if the student is enrolled
+    if not student.is_enrolled:
+        return redirect('landing_page')  # Redirect unenrolled students to the landing page
+
+    # Get the student's quizzes (replace with your logic to fetch quizzes)
+    quizzes = []  # Replace with your logic to fetch quizzes
+
+    context = {
+        'student': student,
+        'quizzes': quizzes,
+    }
+
+    return render(request, 'cms/quizzes_page.html', context)
