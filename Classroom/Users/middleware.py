@@ -28,8 +28,12 @@ class EnrollmentCheckMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        # Exclude the "application_under_review" page from the middleware check
-        if request.path == reverse('application_under_review'):
+        # Exclude specific pages from the middleware check
+        excluded_paths = [
+            reverse('application_under_review'),
+            reverse('upload_bank_statement'),
+        ]
+        if request.path in excluded_paths:
             return self.get_response(request)
 
         # Check if the user is authenticated and is a student
