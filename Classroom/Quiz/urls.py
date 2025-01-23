@@ -7,5 +7,5 @@ urlpatterns = [
     # path('course-material/', views.course_material, name='course_material'),
     # path('grades/', views.grades, name='grades'),
     #  path('essay/<int:quiz_id>/', views.essay_detail, name='essay_detail'),
-    path('' , views.index , name="landing page")
+    path('' , views.index , name="landing_page")
 ]

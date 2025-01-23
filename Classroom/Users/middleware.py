@@ -5,7 +5,7 @@ from django.shortcuts import redirect
 from .models import Device
 from .utils import generate_device_hash
 from django.urls import reverse
-
+from Quiz.views import index
 class DeviceTrackingMiddleware(MiddlewareMixin):
     def process_request(self, request):
         if request.user.is_authenticated and request.user.is_student:
@@ -30,6 +30,7 @@ class EnrollmentCheckMiddleware:
         self.excluded_paths = [
             reverse('application_under_review'),
             reverse('handle_upload'),
+            reverse('landing_page')
         ]
 
     def __call__(self, request):
