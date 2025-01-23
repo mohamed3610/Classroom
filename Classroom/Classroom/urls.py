@@ -23,4 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('Quiz.urls')),
     path('auth/' , include('Users.urls')),
+    path('cms/', include('cms.urls')),  # Include CMS app URLs with the 'cms' namespace
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
