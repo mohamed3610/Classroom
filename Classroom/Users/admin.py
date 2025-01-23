@@ -29,11 +29,10 @@ class HasLoggedInFilter(admin.SimpleListFilter):
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ('user', 'guardian_name', 'student_class', 'is_bank_statement_submitted', 'is_enrolled')
+    list_display = ('user', 'guardian_name', 'student_class', 'is_bank_statement_submitted', 'is_enrolled' , 'bank_statement')
     list_filter = ('student_class', 'is_bank_statement_submitted', 'is_enrolled', HasLoggedInFilter)
     search_fields = ('user__username', 'guardian_name')
     actions = ['enroll_students']
-    readonly_fields = ('bank_statement',)
 
 
     def enroll_students(self, request, queryset):
