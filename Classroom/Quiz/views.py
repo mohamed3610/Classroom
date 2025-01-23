@@ -296,4 +296,4 @@ def index(request):
             pass  # Not a student, show the landing page
 
     # Show the landing page for unauthenticated users or unenrolled students
-    return render(request, 'landing_page.html')
+    return render(request, 'index.html')
