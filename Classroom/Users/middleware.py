@@ -33,7 +33,6 @@ class EnrollmentCheckMiddleware:
         ]
 
     def __call__(self, request):
-        logger.info(f"Middleware invoked for path: {request.path}")
 
         # Exclude specific pages from the middleware check
         if request.path.rstrip('/') in [path.rstrip('/') for path in self.excluded_paths]:
