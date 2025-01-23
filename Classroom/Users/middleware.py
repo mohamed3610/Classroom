@@ -31,7 +31,7 @@ class EnrollmentCheckMiddleware:
         # Exclude specific pages from the middleware check
         excluded_paths = [
             reverse('application_under_review'),
-            reverse('upload_bank_statement'),
+            reverse('handle_upload'),
         ]
         if request.path in excluded_paths:
             return self.get_response(request)
