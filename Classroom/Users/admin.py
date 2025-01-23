@@ -1,6 +1,6 @@
 # users/admin.py
 from django.contrib import admin
-from .models import CustomUser, Student, Class, Grades, Device
+from .models import CustomUser, Student, Class, Device
 from django.db.models import Exists, OuterRef
 from cms.models import CourseMaterial
 @admin.register(CustomUser)
