@@ -2,6 +2,7 @@ import requests
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from Users.models import Student
+import cms
 # from .models import WritingQuiz, WritingSubmission , CourseMaterial, StudentProfile 
 # from .forms import WritingQuizForm
 # import pytesseract
@@ -291,7 +292,7 @@ def index(request):
             student = request.user.student_profile
             # Check if the student is enrolled
             if student.is_enrolled:
-                return redirect('student_cms')  # Redirect enrolled students to the CMS page
+                return redirect('cms:student_cms')  # Redirect enrolled students to the CMS page
         except Student.DoesNotExist:
             pass  # Not a student, show the landing page
 
