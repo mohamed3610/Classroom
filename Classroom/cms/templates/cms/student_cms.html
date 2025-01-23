@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student CMS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #293241;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .empty-message {
+            color: #777;
+            font-style: italic;
+        }
+        .material-list, .quiz-list, .grade-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .material-list li, .quiz-list li, .grade-list li {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .material-list a, .quiz-list a {
+            color: #f4a261;
+            text-decoration: none;
+        }
+        .material-list a:hover, .quiz-list a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome, {{ student.user.username }}!</h1>
+        <p>Class: {{ student.student_class.name }}</p>
+
+        <!-- Course Materials Section -->
+        <div class="section">
+            <h2>Course Materials</h2>
+            {% if no_course_materials %}
+                <p class="empty-message">No course materials available for your class.</p>
+            {% else %}
+                <ul class="material-list">
+                    {% for material in course_materials %}
+                        <li>
+                            <a href="{{ material.file.url }}" target="_blank">{{ material.title }}</a>
+                            <p>{{ material.description }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <!-- Quizzes Section -->
+        <div class="section">
+            <h2>Quizzes</h2>
+            {% if no_quizzes %}
+                <p class="empty-message">No quizzes available for your class.</p>
+            {% else %}
+                <ul class="quiz-list">
+                    {% for quiz in quizzes %}
+                        <li>
+                            <a href="#">{{ quiz.title }}</a>
+                            <p>{{ quiz.description }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <!-- Grades Section -->
+        <div class="section">
+            <h2>Your Grades</h2>
+            {% if no_grades %}
+                <p class="empty-message">No grades available yet.</p>
+            {% else %}
+                <ul class="grade-list">
+                    {% for grade in grades %}
+                        <li>
+                            <strong>{{ grade.subject }}:</strong> {{ grade.score }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
