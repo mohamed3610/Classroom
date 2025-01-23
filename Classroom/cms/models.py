@@ -1,5 +1,7 @@
 from django.db import models
+from Users.models import Class
 class CourseMaterial(models.Model):
+    group = models.ForeignKey(Class , on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     file = models.FileField(upload_to='course_materials/')
     description = models.TextField()
