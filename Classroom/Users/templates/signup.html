@@ -139,7 +139,7 @@
 <body>
   <div class="signup-container">
     <h1>Student Signup</h1>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
       <!-- Username -->
       <div class="form-group">
