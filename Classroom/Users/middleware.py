@@ -26,24 +26,25 @@ class DeviceTrackingMiddleware(MiddlewareMixin):
 class EnrollmentCheckMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
-
-    def __call__(self, request):
-        # Exclude specific pages from the middleware check
-        excluded_paths = [
+        # Precompute reverse lookups for excluded paths
+        self.excluded_paths = [
             reverse('application_under_review'),
             reverse('handle_upload'),
         ]
-        if request.path in excluded_paths:
+
+    def __call__(self, request):
+        logger.info(f"Middleware invoked for path: {request.path}")
+
+        # Exclude specific pages from the middleware check
+        if request.path.rstrip('/') in [path.rstrip('/') for path in self.excluded_paths]:
             return self.get_response(request)
 
         # Check if the user is authenticated and is a student
-        if request.user.is_authenticated and hasattr(request.user, 'student_profile'):
-            student = request.user.student_profile
-
+        student = getattr(request.user, 'student_profile', None)
+        if request.user.is_authenticated and student:
             # Redirect unenrolled students to the "under review" page
             if not student.is_enrolled:
                 return redirect('application_under_review')
 
         # Proceed with the request
-        response = self.get_response(request)
-        return response
+        return self.get_response(request)
