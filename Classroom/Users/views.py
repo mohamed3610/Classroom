@@ -7,6 +7,7 @@ from .models import Device, CustomUser
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
 
 from django.shortcuts import render, redirect
 from .forms import CustomUserCreationForm
@@ -82,9 +83,31 @@ def application_under_review(request):
 
 
 def handle_upload(request):
-    if request.method == 'POST' and request.FILES['bank_statement']:
-        uploaded_file = request.FILES['bank_statement']
-        file_name = default_storage.save(uploaded_file.name, uploaded_file)
-        # Process the file (e.g., save to database, send email, etc.)
-        return HttpResponse("File uploaded successfully!")
-    return HttpResponse("Invalid request.")
+    if not request.user.is_authenticated:
+        messages.error(request, 'You must be logged in to upload a bank statement.')
+        return redirect('login')  # Redirect to login page if the user is not authenticated
+
+    try:
+        student = request.user.student_profile  # Get the student profile of the logged-in user
+    except Student.DoesNotExist:
+        messages.error(request, 'Student profile not found.')
+        return redirect('home')  # Redirect to home or another page if the student profile doesn't exist
+
+    if request.method == 'POST':
+        # Handle file upload
+        uploaded_file = request.FILES.get('bank_statement')  # Get the uploaded file
+        if uploaded_file:
+            # Save the file to the student's bank_statement field
+            student.bank_statement = uploaded_file
+            student.save()
+
+            # Show a success message
+            messages.success(request, 'Bank statement uploaded successfully!')
+            return redirect('application_under_review')  # Redirect to the same page after upload
+        else:
+            # Show an error message if no file is uploaded
+            messages.error(request, 'No file was uploaded. Please try again.')
+            return redirect('upload_bank_statement')
+
+    # Render the upload form for GET requests
+    return render(request, 'second-page.html')
