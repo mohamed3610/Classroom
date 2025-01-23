@@ -11,6 +11,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from .forms import CustomUserCreationForm
 from .models import Student, CustomUser
+from django.core.files.storage import default_storage
 
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -78,3 +79,12 @@ def send_email(subject, template_name, context, recipient_list):
 
 def application_under_review(request):
     return render(request, 'application_under_review.html')
+
+
+def handle_upload(request):
+    if request.method == 'POST' and request.FILES['bank_statement']:
+        uploaded_file = request.FILES['bank_statement']
+        file_name = default_storage.save(uploaded_file.name, uploaded_file)
+        # Process the file (e.g., save to database, send email, etc.)
+        return HttpResponse("File uploaded successfully!")
+    return HttpResponse("Invalid request.")
