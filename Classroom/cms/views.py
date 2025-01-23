@@ -5,19 +5,15 @@ from Users.models import Student
 
 @login_required
 def student_cms(request):
-    # Check if the user is a student
-    if not request.user.is_authenticated:
-        return redirect('landing_page')  # Redirect non-students to the home page
-
     try:
         # Get the student profile
         student = request.user.student_profile
     except Student.DoesNotExist:
-        return redirect('home')  # Redirect if the student profile doesn't exist
+        return redirect('landing_page')  # Redirect if the student profile doesn't exist
 
     # Check if the student is enrolled
     if not student.is_enrolled:
-        return redirect('application_under_review')  # Redirect unenrolled students
+        return redirect('application_under_review')  # Redirect unenrolled students to the landing page
 
     # Get the student's class
     student_class = student.student_class
@@ -26,7 +22,7 @@ def student_cms(request):
     if student_class:
         course_materials = CourseMaterial.objects.filter(group=student_class)
     else:
-        course_materials = []
+        course_materials = CourseMaterial.objects.none()  # Return an empty QuerySet
 
     # Get quizzes for the student's class (assuming you have a Quiz model)
     quizzes = []  # Replace with your logic to fetch quizzes
@@ -35,7 +31,7 @@ def student_cms(request):
     grades = Grades.objects.filter(student=student)
 
     # Check if any of the data is empty
-    no_course_materials = not course_materials.exists()
+    no_course_materials = not course_materials.exists()  # Now this will work
     no_quizzes = not quizzes
     no_grades = not grades.exists()
 
