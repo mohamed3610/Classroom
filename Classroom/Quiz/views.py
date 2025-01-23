@@ -1,6 +1,7 @@
 import requests
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
+from Users.models import Student
 # from .models import WritingQuiz, WritingSubmission , CourseMaterial, StudentProfile 
 # from .forms import WritingQuizForm
 # import pytesseract
@@ -283,4 +284,16 @@ from django.contrib.auth.decorators import login_required
 
 
 def index(request):
-    return render(request , 'index.html')
+    # Check if the user is authenticated
+    if request.user.is_authenticated:
+        try:
+            # Get the student profile
+            student = request.user.student_profile
+            # Check if the student is enrolled
+            if student.is_enrolled:
+                return redirect('student_cms')  # Redirect enrolled students to the CMS page
+        except Student.DoesNotExist:
+            pass  # Not a student, show the landing page
+
+    # Show the landing page for unauthenticated users or unenrolled students
+    return render(request, 'landing_page.html')
