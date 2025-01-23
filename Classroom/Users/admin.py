@@ -3,6 +3,7 @@ from django.contrib import admin
 from .models import CustomUser, Student, Class, Device
 from django.db.models import Exists, OuterRef
 from cms.models import CourseMaterial
+from cms.models import Grades
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
     list_display = ('username', 'email', 'is_teacher', 'is_ta', 'is_student')
