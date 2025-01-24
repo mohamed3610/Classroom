@@ -263,7 +263,7 @@
           <tbody>
             {% for grade in grades %}
             {% for submission in submissions %}
-            {% if submission %}
+            {% if submission.is_confirmed %}
               <tr>
                 <td>{{ grade.subject }}</td>
                 <td>{{ grade.score }}%</td>
