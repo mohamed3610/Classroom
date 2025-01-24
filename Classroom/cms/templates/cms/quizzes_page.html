@@ -216,44 +216,32 @@
 
     /* Media Queries for Larger Screens */
     @media (min-width: 768px) {
-      body {
-        flex-direction: row; /* Sidebar and main content side by side on larger screens */
+        body {
+        flex-direction: column;
       }
 
       .sidebar {
-        width: 250px; /* Fixed width for sidebar on larger screens */
-        height: 100vh; /* Full height */
-        position: fixed; /* Fixed positioning */
-        top: 0;
-        left: 0;
+        width: 100%;
+        height: auto;
+        position: static;
+        padding: 10px;
+        box-shadow: none;
+      }
+
+      .sidebar .cta-button {
+        width: 70%;
       }
 
       .hero, .course-content {
-        margin-left: 270px; /* Adjust for sidebar width */
-      }
-      
-      .hero {
-        padding: 100px 20px; /* Restore padding for larger screens */
+        margin-left: 0;
       }
 
       .hero-text h1 {
-        font-size: 3.5rem; /* Restore font size for larger screens */
+        font-size: 2.5rem;
       }
 
       .hero-text p {
-        font-size: 1.3rem; /* Restore font size for larger screens */
-      }
-
-      .course-content {
-        padding: 40px; /* Restore padding for larger screens */
-        margin-top: 50px; /* Restore margin for larger screens */
-      }
-
-      .course-content h2 {
-        font-size: 2.5rem; /* Restore font size for larger screens */
-      }
-      .sidebar .cta-button {
-      width: 70%;
+        font-size: 1.1rem;
 
     }
     }
