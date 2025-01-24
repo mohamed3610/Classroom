@@ -1,6 +1,30 @@
-# Ignore Python bytecode files
-__pycache__/
+# Ignore Python compiled files
 *.pyc
-myenv
-env
-populate_students.py
+__pycache__/
+
+# Ignore environment files
+.env
+venv/
+env/
+.venv/
+
+# Ignore database files
+*.sqlite3
+*.db
+
+# Ignore IDE-specific files
+.vscode/
+.idea/
+
+# Ignore static and media files (for Django)
+staticfiles/
+media/
+
+# Ignore log files
+*.log
+
+# Ignore macOS system files
+.DS_Store
+
+# Ignore node_modules (if applicable)
+node_modules/
