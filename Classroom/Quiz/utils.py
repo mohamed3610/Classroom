@@ -63,7 +63,7 @@ def grade_essay(essay_text, topic_description):
     
     headers = {
         'x-rapidapi-key': AI_TUTOR_API_KEY,
-        'x-rapidapi-host': "ai-language-tutor-learn-english-spanish-arabic-hindi.p.rapidapi.com/feedback?noqueue=1",
+        'x-rapidapi-host': "ai-language-tutor-learn-english-spanish-arabic-hindi.p.rapidapi.com",
         'Content-Type': "application/json"
     }
     
@@ -82,4 +82,4 @@ def grade_essay(essay_text, topic_description):
         return {'grade': round(grade, 2), 'feedback': feedback}
     except Exception as e:
         logger.error(f"Grading API failed: {e}")
-        return {'grade': 0.0, 'feedback': 'Grading system error'}
+        return {'grade': 0.0, 'feedback': f'Grading system error {e}'}
