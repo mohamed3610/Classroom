@@ -7,9 +7,9 @@ __pycache__/
 venv/
 env/
 .venv/
-
+myenv
 # Ignore database files
-*.sqlite3
+db.sqlite3
 *.db
 
 # Ignore IDE-specific files
@@ -26,5 +26,6 @@ media/
 # Ignore macOS system files
 .DS_Store
 
-# Ignore node_modules (if applicable)
-node_modules/
+populate_students.py
+
+migrations/
