@@ -263,7 +263,7 @@
           <tbody>
             {% for grade in grades %}
               <tr>
-                <td>{{ grade.quiz_or_exam_name }}</td>
+                <td>{{ grade.subject }}</td>
                 <td>{{ grade.score }}%</td>
                 <td>
                   {% if grade.score >= 70 %}
