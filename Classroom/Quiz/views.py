@@ -119,4 +119,4 @@ def submission_success(request):
     """
     Displays a success message after the student submits their assignment.
     """
-    return render(request, 'submission_success.html')
+    return render(request, 'essay_detail.html')
