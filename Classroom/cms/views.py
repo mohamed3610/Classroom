@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import CourseMaterial
 from Users.models import Student
-from.models import Grades
-from Quiz.models import Quiz
+from.models import Grades 
+from Quiz.models import Quiz , Submission
 from django.utils import timezone
 
 @login_required
@@ -53,10 +53,11 @@ def grades_page(request):
 
     # Get the student's grades
     grades = Grades.objects.filter(student=student)
-
+    submissions = Submission.objects.filter(student = student)
     context = {
         'student': student,
         'grades': grades,
+        'submission': submissions
     }
 
     return render(request, 'cms/grades_page.html', context)

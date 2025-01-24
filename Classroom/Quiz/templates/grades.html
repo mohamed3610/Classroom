@@ -198,6 +198,7 @@
                 <tbody>
                     {% for grade in grades %}
                     <tr>
+                        {% if grade.}
                         <td><a href="{% url 'essay_detail' grade.id %}">{{ grade.quiz.title }}</a></td>
                         <td>{{ grade.grade }}</td>
                     </tr>

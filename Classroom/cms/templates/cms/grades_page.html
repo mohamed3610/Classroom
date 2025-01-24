@@ -263,13 +263,17 @@
       <div class="course-list">
         {% if grades %}
           {% for grade in grades %}
+            {% for submission in submissions %}
+                {% if submission.is_confirmed %}
             <div class="course-item">
               <i class="fas fa-chart-line"></i> <!-- Icon for grades -->
               <p>{{ grade.quiz_or_exam_name }}: <strong>{{ grade.score }}%</strong></p>
             </div>
+            {% endfor %}
           {% endfor %}
         {% else %}
           <p>No grades available.</p>
+          {% endif %}
         {% endif %}
       </div>
     </section>
