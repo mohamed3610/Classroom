@@ -1,12 +1,7 @@
-# from django import forms
-# from .models import WritingQuiz, WritingSubmission
+from django import forms
 
-# class WritingQuizForm(forms.ModelForm):
-#     class Meta:
-#         model = WritingSubmission
-#         fields = ['image']
-
-# class WritingQuizCreateForm(forms.ModelForm):
-#     class Meta:
-#         model = WritingQuiz
-#         fields = ['title', 'description', 'criteria']
+class EssaySubmissionForm(forms.Form):
+    images = forms.ImageField(
+        widget=forms.ClearableFileInput(attrs={'multiple': True}),
+        label="Upload images of your essay"
+    )

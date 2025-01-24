@@ -3,6 +3,9 @@ from django.contrib.auth.decorators import login_required
 from .models import CourseMaterial
 from Users.models import Student
 from.models import Grades
+from Quiz.models import Quiz
+from django.utils import timezone
+
 @login_required
 def student_cms(request):
     try:
@@ -58,24 +61,26 @@ def grades_page(request):
 
     return render(request, 'cms/grades_page.html', context)
 
+
 @login_required
 def quizzes_page(request):
     try:
-        # Get the student profile
         student = request.user.student_profile
     except Student.DoesNotExist:
-        return redirect('Quiz:landing_page')  # Redirect if the student profile doesn't exist
+        return redirect('landing_page')
 
-    # Check if the student is enrolled
     if not student.is_enrolled:
-        return redirect('Quiz:landing_page')  # Redirect unenrolled students to the landing page
+        return redirect('landing_page')
 
-    # Get the student's quizzes (replace with your logic to fetch quizzes)
-    quizzes = []  # Replace with your logic to fetch quizzes
+    # Get quizzes for student's class that are published
+    quizzes = Quiz.objects.filter(
+        group=student.student_class,
+        is_published=True
+    ).order_by('-created_at')
 
     context = {
         'student': student,
         'quizzes': quizzes,
+        'current_time': timezone.now()
     }
-
-    return render(request, 'cms/quizzes_page.html', context)
+    return render(request, 'quiz/quizzes_page.html', context)
