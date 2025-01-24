@@ -1,11 +1,14 @@
+{% extends 'cms:base.html' %}
 
-<div class="container">
-    <h2>Quiz Result</h2>
-    {% if message %}
-        <p>{{ message }}</p>
-    {% else %}
-        <p>Grade: {{ submission.grade }}</p>
-        <p>Feedback: {{ submission.feedback }}</p>
-    {% endif %}
-    <a href="" class="btn btn-primary">Return to Dashboard</a>
-</div>
+{% block title %}Quiz Result{% endblock %}
+
+{% block content %}
+<h2>Quiz Result</h2>
+{% if message %}
+    <p>{{ message }}</p>
+{% else %}
+    <p>Grade: {{ submission.grade }}</p>
+    <p>Feedback: {{ submission.feedback }}</p>
+{% endif %}
+<a href="{% url 'dashboard' %}" class="btn btn-primary">Return to Dashboard</a>
+{% endblock %}
