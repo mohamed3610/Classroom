@@ -251,8 +251,7 @@
     <!-- Grades Content -->
     <section class="course-content">
       <h2>Grades</h2>
-      {% for submission in submissions %}
-      {% if grades or submission.is_confirmed %}
+      {% if submissions %}
         <table class="grades-table">
           <thead>
             <tr>
@@ -262,22 +261,20 @@
             </tr>
           </thead>
           <tbody>
-            {% for grade in grades %}
-            
-         
-              <tr>
-                <td>{{ grade.subject }}</td>
-                <td>{{ grade.score }}%</td>
-                <td>
-                  {% if grade.score >= 60 %}
-                    <span style="color: green;">Pass</span>
-                  {% else %}
-                    <span style="color: red;">Fail</span>
-                  {% endif %}
-                </td>
-              </tr>
-           
-              {% endfor %}
+            {% for submission in submissions %}
+              {% if submission.is_confirmed %}
+                <tr>
+                  <td>{{ submission.quiz.title }}</td>
+                  <td>{{ submission.grade }}%</td>
+                  <td>
+                    {% if submission.grade >= 60 %}
+                      <span style="color: green;">Pass</span>
+                    {% else %}
+                      <span style="color: red;">Fail</span>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endif %}
             {% endfor %}
           </tbody>
         </table>
