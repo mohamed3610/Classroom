@@ -279,28 +279,28 @@
       <h2>Quizzes</h2>
       <div class="course-list">
         {% if quizzes %}
-          {% for quiz in quizzes %}
-            <div class="course-item">
-              <i class="fas fa-file-alt"></i>
-              <h3>{{ quiz.title }}</h3>
-              <p>{{ quiz.description }}</p>
-              {% if quiz.due_date %}
-                <p>Due: {{ quiz.due_date|date:"F j, Y H:i" }}</p>
-              {% endif %}
-              
-              {% if quiz.is_active %}
-                <a href="{% url 'quiz:take_quiz' quiz.id %}" class="cta-button">
-                  Take Quiz
-                </a>
-              {% else %}
-                <div class="expired">Quiz Expired</div>
-              {% endif %}
-            </div>
-          {% endfor %}
+            {% for quiz in quizzes %}
+                <div class="course-item">
+                    <i class="fas fa-file-alt"></i>
+                    <h3>{{ quiz.title }}</h3>
+                    <p>{{ quiz.description }}</p>
+                    {% if quiz.due_date %}
+                        <p>Due: {{ quiz.due_date|date:"F j, Y H:i" }}</p>
+                    {% endif %}
+                    
+                    {% if quiz.is_active %}
+                        <a href="{% url 'quiz:take_quiz' quiz.id %}" class="cta-button">
+                            Take Quiz
+                        </a>
+                    {% else %}
+                        <div class="expired">Quiz Expired</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
         {% else %}
-          <p>No quizzes available for your class.</p>
+            <p>No quizzes available for your class.</p>
         {% endif %}
-      </div>
+    </div>
     </section>
   </div>
 </body>
