@@ -57,7 +57,7 @@ def grades_page(request):
     context = {
         'student': student,
         'grades': grades,
-        'submission': submissions
+        'submissions': submissions
     }
 
     return render(request, 'cms/grades_page.html', context)
