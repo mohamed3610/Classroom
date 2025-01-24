@@ -1,326 +1,345 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Take the Quiz - Shaymaa's English Classes</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <style>
-        /* General Styles */
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f7fa;
-            color: #333;
-            overflow-x: hidden;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Take the Quiz - Shaymaa's English Classes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    /* General Styles */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #f4f7fa;
+      color: #333;
+      overflow-x: hidden;
+      display: flex;
+    }
 
-        h1, h2, p {
-            margin: 0;
-        }
+    h1, h2, h3, p {
+      margin: 0;
+    }
 
-        .container {
-            width: 80%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 0;
-        }
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 0;
+    }
 
-        /* Navbar Styles */
-        .navbar {
-            background-color: #e0f7fa; /* Darker light blue */
-            padding: 15px 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
+    /* Sidebar Styles */
+    .sidebar {
+      width: 250px;
+      background-color: #293241;
+      color: #fff;
+      padding: 20px;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-        .navbar .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    .sidebar-content {
+      flex-grow: 0.9; /* Push the logout button to the bottom */
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-        .navbar .logo {
-            color: #f4a261;
-            font-size: 1.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            margin-left: 20px;
-        }
+    .sidebar-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 30px;
+      text-align: center;
+      padding: 10px;
+      border-bottom: 2px solid #f4a261;
+    }
 
-        .navbar ul {
-            list-style: none;
-            padding: 0;
-            display: flex;
-            gap: 30px;
-            margin: 0;
-        }
+    .sidebar .cta-button {
+      display: block;
+      width: 100%;
+      background-color: #3f4c61;
+      color: white;
+      padding: 12px 20px;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      margin-bottom: 10px;
+      text-align: center;
+    }
 
-        .navbar ul li {
-            display: inline-block;
-        }
+    .sidebar .cta-button[type="submit"] {
+      background-color: #e63946; /* Red color for logout button */
+      border: none;
+      width: 100%;
+      cursor: pointer;
+    }
 
-        .navbar ul li a {
-            color: #333;
-            text-decoration: none;
-            font-size: 1.2rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            padding: 10px 20px;
-            border-radius: 30px;
-            transition: background-color 0.3s ease;
-        }
+    .sidebar .cta-button[type="submit"]:hover {
+      background-color: #d62828; /* Darker red on hover */
+      transform: translateY(-3px);
+    }
 
-        .navbar ul li a:hover {
-            background-color: #f4a261;
-            color: #fff;
-        }
-        .form-group textarea {
-    padding: 20px;
-    font-size: 1.5rem;  /* Slightly larger font size for easier reading */
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    overflow: scroll;
-    height: 500px;  /* Increased height */
-    box-sizing: border-box;
-    margin-top: 5px;
-    resize: none;  /* Disable resizing */
-}
+    .sidebar .cta-button:hover {
+      background-color: #f4a261;
+      transform: translateY(-3px);
+    }
 
-.form-group textarea:focus {
-    outline: none;
-    border-color: #f4a261;
-}
-        /* Quiz Section */
-        .quiz-section {
-            background-color: #fff;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-top: 30px;
-            animation: fadeIn 1.5s forwards;
-        }
+    /* Hero Section */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #293241, #3f4c61);
+      color: #fff;
+      padding: 100px 20px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      opacity: 0;
+      animation: fadeIn 1.5s forwards;
+      margin-left: 270px; /* Adjust for sidebar width */
+    }
 
-        .quiz-section h1 {
-            font-size: 2.5rem;
-            color: #293241;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
+    .hero-text h1 {
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
 
-        .quiz-section p.description {
-            font-size: 1.5rem;
-            color: #444;
-            margin-bottom: 30px;
-            background-color: #f9f9f9;
-            padding: 15px;
-            border-left: 5px solid #f4a261;
-            border-radius: 5px;
-        }
+    .hero-text p {
+      font-size: 1.3rem;
+      margin-bottom: 30px;
+      font-weight: 300;
+    }
 
-        .quiz-section form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+    /* Course Content Section */
+    .course-content {
+      background-color: #fff;
+      padding: 40px;
+      border-radius: 15px;
+      margin-top: 50px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      animation: fadeIn 1.5s 0.5s forwards;
+      margin-left: 270px; /* Adjust for sidebar width */
+    }
 
-        .quiz-section form .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+    .course-content h2 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      color: #293241;
+      font-weight: 600;
+    }
 
-        .form-group label {
-            font-size: 1.2rem;
-            color: #293241;
-        }
+    .form-group textarea {
+      padding: 20px;
+      font-size: 1.5rem; /* Slightly larger font size for easier reading */
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      overflow: scroll;
+      height: 500px; /* Increased height */
+      box-sizing: border-box;
+      margin-top: 5px;
+      resize: none; /* Disable resizing */
+    }
 
-        .form-group input, .form-group select, .form-group textarea {
-            padding: 10px;
-            font-size: 1rem;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            width: 100%;
-            margin-top: 5px;
-            box-sizing: border-box;
-        }
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #f4a261;
+    }
 
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: #f4a261;
-        }
-        
+    .form-group input {
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      width: 100%;
+      margin-top: 5px;
+      box-sizing: border-box;
+    }
 
-        button {
-            background-color: #f4a261;
-            color: white;
-            padding: 15px 30px;
-            text-transform: uppercase;
-            border: none;
-            border-radius: 30px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            align-self: flex-start;
-        }
+    .form-group input:focus {
+      outline: none;
+      border-color: #f4a261;
+    }
 
-        button:hover {
-            background-color: #e76f51;
-        }
-        .error-message {
-    background-color: #ffdddd; /* Light red background */
-    color: #d8000c; /* Red text */
-    border: 1px solid #d8000c;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-}
+    button {
+      background-color: #f4a261;
+      color: white;
+      padding: 15px 30px;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 30px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      align-self: flex-start;
+    }
 
-        /* Loading Spinner */
-        .loader {
-            border: 5px solid #f3f3f3; /* Light gray */
-            border-top: 5px solid #f4a261; /* Orange color */
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
+    button:hover {
+      background-color: #e76f51;
+    }
 
-        /* Loading Screen */
-        #loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-            display: none; /* Initially hidden */
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            z-index: 1000;
-        }
+    .error-message {
+      background-color: #ffdddd; /* Light red background */
+      color: #d8000c; /* Red text */
+      border: 1px solid #d8000c;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
 
-        #loading-overlay h2 {
-            color: white;
-            font-size: 1.5rem;
-            margin-top: 20px;
-        }
+    /* Loading Spinner */
+    .loader {
+      border: 5px solid #f3f3f3; /* Light gray */
+      border-top: 5px solid #f4a261; /* Orange color */
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+    /* Loading Screen */
+    #loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+      display: none; /* Initially hidden */
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 1000;
+    }
 
-        /* Animations */
-        @keyframes fadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-        }
+    #loading-overlay h2 {
+      color: white;
+      font-size: 1.5rem;
+      margin-top: 20px;
+    }
 
-        /* Mobile Navbar */
-        .navbar .menu-toggle {
-            display: none;
-            font-size: 2rem;
-            cursor: pointer;
-            color: #333;
-        }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
 
-        @media (max-width: 768px) {
-            .navbar ul {
-                display: none;
-                flex-direction: column;
-                align-items: center;
-                gap: 15px;
-                margin-top: 20px;
-                padding: 10px;
-            }
+    /* Animations */
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
 
-            .navbar ul li {
-                display: block;
-            }
+    /* Media Queries */
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
 
-            .navbar .menu-toggle {
-                display: block;
-            }
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+        padding: 10px;
+        box-shadow: none;
+      }
 
-            .navbar ul.active {
-                display: flex;
-            }
-        }
+      .sidebar .cta-button {
+        width: 70%;
+      }
 
-    </style>
+      .hero, .course-content {
+        margin-left: 0;
+      }
+
+      .hero-text h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero-text p {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <!-- Navbar Section -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="logo">Shaymaa's Classes</div>
-            <div class="menu-toggle" id="menu-toggle">
-                <i class="fa fa-bars"></i>
-            </div>
-            <ul id="navbar-links">
-                <li><a href="/">Home</a></li>
-                <li><a href="/quiz">Take the Quiz</a></li>
-                <li><a href="/about">About</a></li>
-                <li><a href="/contact">Contact</a></li>
-                <li><a href="/login">Login</a></li>
-            </ul>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-content">
+      <div class="sidebar-title">Shaymaa's English Classes</div>
+      <a href="{% url 'cms:student_cms' %}" class="cta-button">CMS</a>
+      <a href="{% url 'cms:quizzes_page' %}" class="cta-button">Take Quizzes</a>
+    </div>
+    <!-- Logout Button -->
+    <form action="{% url 'logout' %}" method="post">
+      {% csrf_token %}
+      <button type="submit" class="cta-button" style="background-color: #e63946;">Logout</button>
+    </form>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-text">
+        <h1>{{ quiz.title }}</h1>
+        <p>{{ quiz.description }}</p>
+      </div>
+    </section>
+
+    <!-- Quiz Content -->
+    <section class="course-content">
+      <h2>Take the Quiz</h2>
+      {% if error %}
+        <div class="error-message">
+          {{ error }}
         </div>
-    </nav>
+      {% endif %}
+      <form method="post" id="quiz-form" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+          <input type="file" name="image" accept="image/*">
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+    </section>
+  </div>
 
-    <div class="container">
-        <section class="quiz-section">
-            <h1>{{ quiz.title }}</h1>
-            <p class="description">{{ quiz.description }}</p>
-            {% if error %}
-            <div class="error-message" style="color: red; font-weight: bold; margin-bottom: 20px;">
-                {{ error }}
-            </div>
-        {% endif %}
-            <form method="post" id="quiz-form" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="form-group">
-                    <input type="file" name="image" accept="image/*">
-              </div>
-                <button type="submit">Submit</button>
-            </form>
-        </section>
-    </div>
+  <!-- Loading Overlay -->
+  <div id="loading-overlay">
+    <div class="loader"></div>
+    <h2>Hold tight! Your essay is being graded...</h2>
+  </div>
 
-    <!-- Loading Overlay -->
-    <div id="loading-overlay">
-        <div class="loader"></div>
-        <h2>Hold tight! Your essay is being graded...</h2>
-    </div>
+  <script>
+    // Handle form submission and show loading screen
+    const form = document.getElementById('quiz-form');
+    const loadingOverlay = document.getElementById('loading-overlay');
 
-    <script>
-        // Toggle navbar menu on mobile
-        const menuToggle = document.getElementById('menu-toggle');
-        const navbarLinks = document.getElementById('navbar-links');
+    form.addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent form from submitting immediately
+      loadingOverlay.style.display = 'flex'; // Show loading overlay
 
-        menuToggle.addEventListener('click', () => {
-            navbarLinks.classList.toggle('active');
-        });
-
-        // Handle form submission and show loading screen
-        const form = document.getElementById('quiz-form');
-        const loadingOverlay = document.getElementById('loading-overlay');
-
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();  // Prevent form from submitting immediately
-            loadingOverlay.style.display = 'flex';  // Show loading overlay
-
-            // Simulate an AJAX submission with a timeout (you can replace this with actual AJAX logic)
-            setTimeout(function() {
-                form.submit();  // Submit the form after the "loading" animation is complete
-            }, 3000); // Simulate a 3-second delay
-        });
-    </script>
+      // Simulate an AJAX submission with a timeout (you can replace this with actual AJAX logic)
+      setTimeout(function() {
+        form.submit(); // Submit the form after the "loading" animation is complete
+      }, 3000); // Simulate a 3-second delay
+    });
+  </script>
 </body>
 </html>
