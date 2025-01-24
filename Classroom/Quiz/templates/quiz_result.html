@@ -3,6 +3,7 @@
 {% block title %}Quiz Result{% endblock %}
 
 {% block content %}
+<section class="course-content">
 <h2>Quiz Result</h2>
 {% if message %}
     <p>{{ message }}</p>
@@ -11,4 +12,5 @@
     <p>Feedback: {{ submission.feedback }}</p>
 {% endif %}
 <a href="" class="btn btn-primary">Return to Dashboard</a>
+</section>
 {% endblock %}
