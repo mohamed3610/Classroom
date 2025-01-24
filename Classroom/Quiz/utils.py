@@ -4,7 +4,6 @@ from .models import Quiz, Submission
 from .forms import EssaySubmissionForm
 import requests
 import re
-import spacy
 import logging
 
 logger = logging.getLogger(__name__)
@@ -16,7 +15,6 @@ OCR_API_URL = "https://image-to-text30.p.rapidapi.com/api/rapidapi/image-to-text
 OCR_API_KEY = "4b8c24a644mshf0872526fa20c27p1e77c6jsn4d11578ae49c"  # Replace with your actual RapidAPI key
 
 # Load spaCy model for topic relevance checking
-nlp = spacy.load("en_core_web_md")  # Make sure this model is installed
 
 def extract_text_from_image(image_path):
     """
@@ -54,18 +52,6 @@ def extract_numeric_grade(feedback):
         return float(match.group(1))
     return 0.0
 
-def is_submission_on_topic(submission_text, quiz_title, quiz_description, threshold=0.7):
-    """
-    Checks if the submission is relevant to the quiz title and description using semantic similarity.
-    Returns a tuple (is_relevant, similarity_score).
-    """
-    submission_doc = nlp(submission_text)
-    topic_doc = nlp(quiz_title + " " + quiz_description)
-
-    similarity_score = submission_doc.similarity(topic_doc)
-
-    is_relevant = similarity_score >= threshold
-    return is_relevant, similarity_score
 
 def send_to_copilot(submission_text, criteria, topic_description):
     """
