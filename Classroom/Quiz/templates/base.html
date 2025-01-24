@@ -233,7 +233,26 @@
     </style>
 </head>
 <body>
+  <div class="sidebar">
+    <div class="sidebar-content">
+      <div class="sidebar-title">Shaymaa's English Classes</div>
+      <a href="{% url 'cms:student_cms' %}" class="cta-button">CMS</a>
+      <a href="{% url 'cms:quizzes_page' %}" class="cta-button">Take Quizzes</a>
+    </div>
+    <!-- Logout Button -->
+    <form action="{% url 'logout' %}" method="post">
+      {% csrf_token %}
+      <button type="submit" class="cta-button" style="background-color: #e63946;">Logout</button>
+    </form>
+  </div>
     <div class="container">
+
+      <section class="hero">
+        <div class="hero-text">
+          <h1>Good Luck!</h1>
+          <p>View your grades and track your progress.</p>
+        </div>
+      </section>
         {% block content %}
         <!-- Content will be overridden by child templates -->
         {% endblock %}
