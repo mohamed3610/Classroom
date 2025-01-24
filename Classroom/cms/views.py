@@ -9,11 +9,11 @@ def student_cms(request):
         # Get the student profile
         student = request.user.student_profile
     except Student.DoesNotExist:
-        return redirect('landing_page')  # Redirect if the student profile doesn't exist
+        return redirect('Quiz:landing_page')  # Redirect if the student profile doesn't exist
 
     # Check if the student is enrolled
     if not student.is_enrolled:
-        return redirect('landing_page')  # Redirect unenrolled students to the landing page
+        return redirect('Quiz:landing_page')  # Redirect unenrolled students to the landing page
 
     # Get the student's class
     student_class = student.student_class
@@ -42,11 +42,11 @@ def grades_page(request):
         # Get the student profile
         student = request.user.student_profile
     except Student.DoesNotExist:
-        return redirect('landing_page')  # Redirect if the student profile doesn't exist
+        return redirect('Quiz:landing_page')  # Redirect if the student profile doesn't exist
 
     # Check if the student is enrolled
     if not student.is_enrolled:
-        return redirect('landing_page')  # Redirect unenrolled students to the landing page
+        return redirect('Quiz:landing_page')  # Redirect unenrolled students to the landing page
 
     # Get the student's grades
     grades = Grades.objects.filter(student=student)
@@ -64,11 +64,11 @@ def quizzes_page(request):
         # Get the student profile
         student = request.user.student_profile
     except Student.DoesNotExist:
-        return redirect('landing_page')  # Redirect if the student profile doesn't exist
+        return redirect('Quiz:landing_page')  # Redirect if the student profile doesn't exist
 
     # Check if the student is enrolled
     if not student.is_enrolled:
-        return redirect('landing_page')  # Redirect unenrolled students to the landing page
+        return redirect('Quiz:landing_page')  # Redirect unenrolled students to the landing page
 
     # Get the student's quizzes (replace with your logic to fetch quizzes)
     quizzes = []  # Replace with your logic to fetch quizzes
