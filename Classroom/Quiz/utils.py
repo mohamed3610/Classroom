@@ -63,7 +63,7 @@ def grade_essay(essay_text, topic_description):
     
     headers = {
         'x-rapidapi-key': AI_TUTOR_API_KEY,
-        'x-rapidapi-host': "ai-language-tutor-learn-english-spanish-arabic-hindi.p.rapidapi.com",
+        'x-rapidapi-host': "ai-language-tutor-learn-english-spanish-arabic-hindi.p.rapidapi.com/feedback?noqueue=1",
         'Content-Type': "application/json"
     }
     
