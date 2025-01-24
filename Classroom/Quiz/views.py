@@ -63,7 +63,7 @@ def take_quiz(request, quiz_id):
     else:
         form = EssaySubmissionForm()
 
-    return render(request, 'quiz/take_quiz.html', {'quiz': quiz, 'form': form})
+    return render(request, 'take_quiz.html', {'quiz': quiz, 'form': form})
 
 @login_required
 def quiz_result(request, submission_id):
@@ -76,7 +76,7 @@ def quiz_result(request, submission_id):
         return redirect('landing_page')
 
     submission = get_object_or_404(Submission, id=submission_id, student=student)
-    return render(request, 'quiz/quiz_result.html', {'submission': submission})
+    return render(request, 'quiz_result.html', {'submission': submission})
 def index(request):
     # Check if the user is authenticated
     if request.user.is_authenticated:
