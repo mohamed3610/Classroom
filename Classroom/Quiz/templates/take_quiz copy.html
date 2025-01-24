@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Take the Quiz - Shaymaa's English Classes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    /* General Styles */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #f4f7fa;
+      color: #333;
+      overflow-x: hidden;
+      display: flex;
+    }
+
+    h1, h2, h3, p {
+      margin: 0;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 0;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+      width: 250px;
+      background-color: #293241;
+      color: #fff;
+      padding: 20px;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .sidebar-content {
+      flex-grow: 0.9; /* Push the logout button to the bottom */
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .sidebar-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 30px;
+      text-align: center;
+      padding: 10px;
+      border-bottom: 2px solid #f4a261;
+    }
+
+    .sidebar .cta-button {
+      display: block;
+      width: 100%;
+      background-color: #3f4c61;
+      color: white;
+      padding: 12px 20px;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .sidebar .cta-button[type="submit"] {
+      background-color: #e63946; /* Red color for logout button */
+      border: none;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .sidebar .cta-button[type="submit"]:hover {
+      background-color: #d62828; /* Darker red on hover */
+      transform: translateY(-3px);
+    }
+
+    .sidebar .cta-button:hover {
+      background-color: #f4a261;
+      transform: translateY(-3px);
+    }
+
+    /* Hero Section */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #293241, #3f4c61);
+      color: #fff;
+      padding: 100px 20px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      opacity: 0;
+      animation: fadeIn 1.5s forwards;
+      margin-left: 270px; /* Adjust for sidebar width */
+    }
+
+    .hero-text h1 {
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .hero-text p {
+      font-size: 1.3rem;
+      margin-bottom: 30px;
+      font-weight: 300;
+    }
+
+    /* Course Content Section */
+    .course-content {
+      background-color: #fff;
+      padding: 40px;
+      border-radius: 15px;
+      margin-top: 50px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      animation: fadeIn 1.5s 0.5s forwards;
+      margin-left: 270px; /* Adjust for sidebar width */
+    }
+
+    .course-content h2 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      color: #293241;
+      font-weight: 600;
+    }
+
+    .form-group textarea {
+      padding: 20px;
+      font-size: 1.5rem; /* Slightly larger font size for easier reading */
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      overflow: scroll;
+      height: 500px; /* Increased height */
+      box-sizing: border-box;
+      margin-top: 5px;
+      resize: none; /* Disable resizing */
+    }
+
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #f4a261;
+    }
+
+    .form-group input {
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      width: 100%;
+      margin-top: 5px;
+      box-sizing: border-box;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #f4a261;
+    }
+
+    button {
+      background-color: #f4a261;
+      color: white;
+      padding: 15px 30px;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 30px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      align-self: flex-start;
+    }
+
+    button:hover {
+      background-color: #e76f51;
+    }
+
+    .error-message {
+      background-color: #ffdddd; /* Light red background */
+      color: #d8000c; /* Red text */
+      border: 1px solid #d8000c;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+
+    /* Loading Spinner */
+    .loader {
+      border: 5px solid #f3f3f3; /* Light gray */
+      border-top: 5px solid #f4a261; /* Orange color */
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+
+    /* Loading Screen */
+    #loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+      display: none; /* Initially hidden */
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 1000;
+    }
+
+    #loading-overlay h2 {
+      color: white;
+      font-size: 1.5rem;
+      margin-top: 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    /* Media Queries */
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+        padding: 10px;
+        box-shadow: none;
+      }
+
+      .sidebar .cta-button {
+        width: 70%;
+      }
+
+      .hero, .course-content {
+        margin-left: 0;
+      }
+
+      .hero-text h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero-text p {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-content">
+      <div class="sidebar-title">Shaymaa's English Classes</div>
+      <a href="{% url 'cms:student_cms' %}" class="cta-button">CMS</a>
+      <a href="{% url 'cms:quizzes_page' %}" class="cta-button">Take Quizzes</a>
+    </div>
+    <!-- Logout Button -->
+    <form action="{% url 'logout' %}" method="post">
+      {% csrf_token %}
+      <button type="submit" class="cta-button" style="background-color: #e63946;">Logout</button>
+    </form>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-text">
+        <h1>{{ quiz.title }}</h1>
+        <p>{{ quiz.description }}</p>
+      </div>
+    </section>
+
+    <!-- Quiz Content -->
+    <section class="course-content">
+      <h2>Take the Quiz</h2>
+      {% if error %}
+        <div class="error-message">
+          {{ error }}
+        </div>
+      {% endif %}
+      <form method="post" id="quiz-form" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.images.label_tag }}
+            {{ form.images }}
+            {% if form.images.errors %}
+                <div class="error-message">
+                    {{ form.images.errors }}
+                </div>
+            {% endif %}
+            <small class="form-text text-muted">{{ form.images.help_text }}</small>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+    </section>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div id="loading-overlay">
+    <div class="loader"></div>
+    <h2>Hold tight! Your essay is being graded...</h2>
+  </div>
+
+  <script>
+    // Handle form submission and show loading screen
+    const form = document.getElementById('quiz-form');
+    const loadingOverlay = document.getElementById('loading-overlay');
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent form from submitting immediately
+      loadingOverlay.style.display = 'flex'; // Show loading overlay
+
+      // Simulate an AJAX submission with a timeout (you can replace this with actual AJAX logic)
+      setTimeout(function() {
+        form.submit(); // Submit the form after the "loading" animation is complete
+      }, 3000); // Simulate a 3-second delay
+    });
+  </script>
+</body>
+</html>
