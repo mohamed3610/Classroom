@@ -262,6 +262,8 @@
           </thead>
           <tbody>
             {% for grade in grades %}
+            {% for submission in submissions %}
+            {% if submission %}
               <tr>
                 <td>{{ grade.subject }}</td>
                 <td>{{ grade.score }}%</td>
@@ -273,6 +275,8 @@
                   {% endif %}
                 </td>
               </tr>
+              {% endif %}
+              {% endfor %}
             {% endfor %}
           </tbody>
         </table>
