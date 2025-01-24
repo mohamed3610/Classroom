@@ -48,38 +48,37 @@ def extract_text_from_image(image_path):
         if os.path.exists(processed_path):
             os.remove(processed_path)
 
-import http.client
-import json
-import logging
 
 # Configure logging
 logger = logging.getLogger(__name__)
 
 def grade_essay(essay_text, topic_description):
     """
-    Grade an essay using the RapidAPI Language Tutor API.
+    Grade an essay using the Copilot API.
     """
     if not essay_text.strip():
         return {'grade': 0.0, 'feedback': 'No text extracted for grading'}
 
-    conn = http.client.HTTPSConnection("ai-language-tutor-learn-english-spanish-arabic-hindi.p.rapidapi.com")
+    conn = http.client.HTTPSConnection("copilot5.p.rapidapi.com")
+
+    # Prepare the payload for the Copilot API
     payload = json.dumps({
-        "topic": topic_description,
-        "nativeLanguage": "en",
-        "targetLanguage": "en",
-        "level": "intermediate",
-        "situationType": "casual"
+        "message": essay_text,
+        "conversation_id": None,  # Optional: Add a conversation ID if needed
+        "tone": "BALANCED",       # Tone of the response (e.g., BALANCED, FORMAL, INFORMAL)
+        "markdown": False,        # Set to True if you want markdown formatting
+        "photo_url": None         # Optional: Add a photo URL if needed
     })
 
     headers = {
         'x-rapidapi-key': "4b8c24a644mshf0872526fa20c27p1e77c6jsn4d11578ae49c",  # Replace with your API key
-        'x-rapidapi-host': "ai-language-tutor-learn-english-spanish-arabic-hindi.p.rapidapi.com",
+        'x-rapidapi-host': "copilot5.p.rapidapi.com",
         'Content-Type': "application/json"
     }
 
     try:
         # Make the API request
-        conn.request("POST", "/conversation?noqueue=1", payload, headers)
+        conn.request("POST", "/copilot", payload, headers)
         res = conn.getresponse()
 
         # Check if the request was successful

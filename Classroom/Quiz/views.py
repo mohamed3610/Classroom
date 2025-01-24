@@ -6,6 +6,8 @@ from Users.models import Student
 from cms.models import Grades
 from .forms import EssaySubmissionForm
 from .utils import extract_text_from_image, grade_essay
+import logging
+logger = logging.getLogger(__name__)
 
 @login_required
 def take_quiz(request, quiz_id):
@@ -69,6 +71,7 @@ def take_quiz(request, quiz_id):
         'quiz': quiz,
         'form': form,
     })
+
 @login_required
 def quiz_result(request, submission_id):
     try:
