@@ -5,7 +5,7 @@ from .models import Quiz, Submission
 from Users.models import Student
 from cms.models import Grades
 from .forms import EssaySubmissionForm
-from .utils import extract_text_from_image, grade_essay
+from .utils import extract_text_from_image, send_to_copilot
 import logging
 logger = logging.getLogger(__name__)
 
@@ -39,7 +39,7 @@ def take_quiz(request, quiz_id):
                         extracted_text = extract_text_from_image(submission.image.path)
                         if extracted_text:
                             # Grade the essay
-                            grading_result = grade_essay(extracted_text, quiz.description)
+                            grading_result = send_to_copilot(extracted_text, quiz.description)
                             submission.extracted_text = extracted_text
                             submission.grade = grading_result.get('grade', 0)
                             submission.feedback = grading_result.get('feedback', '')

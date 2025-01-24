@@ -1,103 +1,163 @@
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import WritingQuiz, Submission
+from .forms import WritingQuizForm
 import requests
-import json
-import http.client
+import re
+import spacy
 import logging
-import os
-from PIL import Image, ImageEnhance
 
 logger = logging.getLogger(__name__)
 
 # API Configuration
-OCR_API_URL = "https://image-to-text30.p.rapidapi.com/api/rapidapi/image-to-text"
-OCR_API_KEY = "4b8c24a644mshf0872526fa20c27p1e77c6jsn4d11578ae49c"
-AI_TUTOR_API_KEY = "4b8c24a644mshf0872526fa20c27p1e77c6jsn4d11578ae49c"
+COPILOT_API_URL = 'https://copilot5.p.rapidapi.com/copilot'  # Replace with actual Copilot API URL
+COPILOT_API_KEY = '4b8c24a644mshf0872526fa20c27p1e77c6jsn4d11578ae49c'  # Your RapidAPI key
+OCR_API_URL = "https://image-to-text30.p.rapidapi.com/api/rapidapi/image-to-text"  # OCR API endpoint
+OCR_API_KEY = "4b8c24a644mshf0872526fa20c27p1e77c6jsn4d11578ae49c"  # Replace with your actual RapidAPI key
 
-def preprocess_image(image_path):
-    try:
-        image = Image.open(image_path)
-        image = image.resize((800, 800))
-        enhancer = ImageEnhance.Contrast(image)
-        image = enhancer.enhance(2.0)
-        processed_image_path = f"processed_{os.path.basename(image_path)}"
-        image.save(processed_image_path)
-        return processed_image_path
-    except Exception as e:
-        logger.error(f"Image preprocessing failed: {e}")
-        return None
+# Load spaCy model for topic relevance checking
+nlp = spacy.load("en_core_web_md")  # Make sure this model is installed
 
 def extract_text_from_image(image_path):
-    processed_path = preprocess_image(image_path)
-    if not processed_path:
-        return None
-
-    headers = {'X-RapidAPI-Key': OCR_API_KEY}
-    
-    try:
-        with open(processed_path, 'rb') as f:
-            files = {'image': f}
-            response = requests.post(OCR_API_URL, headers=headers, files=files)
-            if response.status_code == 200:
-                return response.json().get('text', '')
-            else:
-                logger.error(f"OCR API Error: {response.status_code} - {response.text}")
-                return None
-    except Exception as e:
-        logger.error(f"OCR extraction failed: {e}")
-        return None
-    finally:
-        if os.path.exists(processed_path):
-            os.remove(processed_path)
-
-
-# Configure logging
-logger = logging.getLogger(__name__)
-
-def grade_essay(essay_text, topic_description):
     """
-    Grade an essay using a simplified approach with the Copilot API.
+    Extracts text from an image using the OCR API.
     """
-    if not essay_text.strip():
-        return {'grade': 0.0, 'feedback': 'No text extracted for grading'}
-
-    conn = http.client.HTTPSConnection("copilot5.p.rapidapi.com")
-
-    # Prepare payload with explicit topic context and simpler instructions
-    payload = json.dumps({
-        "message": f"Provide a simple grade and brief feedback for this essay on '{topic_description}':\n{essay_text}",
-        "conversation_id": "easy_grading",
-        "tone": "INFORMAL",
-        "markdown": False,
-        "photo_url": None
-    })
-
     headers = {
-        'x-rapidapi-key': "4b8c24a644mshf0872526fa20c27p1e77c6jsn4d11578ae49c",
-        'x-rapidapi-host': "copilot5.p.rapidapi.com",
-        'Content-Type': "application/json"
+        'X-RapidAPI-Key': OCR_API_KEY,
     }
 
     try:
-        conn.request("POST", "/copilot", payload, headers)
-        res = conn.getresponse()
+        with open(image_path, 'rb') as image_file:
+            files = {
+                'image': image_file  # The image will be sent here
+            }
 
-        if res.status == 200:
-            data = json.loads(res.read().decode("utf-8"))
-            feedback = data.get("response", "No feedback available")
+            response = requests.post(OCR_API_URL, headers=headers, files=files)
 
-            # Simplified grading based on positive keywords
-            grade = 85.0  # Base passing grade
-            if 'excellent' in feedback.lower():
-                grade = 95.0
-            elif 'needs improvement' in feedback.lower():
-                grade = 70.0
-                
-            return {'grade': round(grade, 2), 'feedback': feedback}
-        else:
-            logger.error(f"API Error: {res.status} - {res.reason}")
-            return {'grade': 0.0, 'feedback': f'Grading system error: {res.reason}'}
-
+            if response.status_code == 200:
+                data = response.json()
+                extracted_text = data.get('text', '')
+                return extracted_text
+            else:
+                logger.error(f"Error extracting text. Status Code: {response.status_code}, Response: {response.text}")
+                return None
     except Exception as e:
-        logger.error(f"Error in grade_easy: {e}")
-        return {'grade': 0.0, 'feedback': 'Grading error occurred'}
-    finally:
-        conn.close()
+        logger.error(f"An error occurred: {e}")
+        return None
+
+def extract_numeric_grade(feedback):
+    """
+    Extracts the grade from the feedback using a regular expression.
+    """
+    match = re.search(r"Your grade is\s*(\d+\.?\d*)", feedback, re.IGNORECASE)
+    if match:
+        return float(match.group(1))
+    return 0.0
+
+def is_submission_on_topic(submission_text, quiz_title, quiz_description, threshold=0.7):
+    """
+    Checks if the submission is relevant to the quiz title and description using semantic similarity.
+    Returns a tuple (is_relevant, similarity_score).
+    """
+    submission_doc = nlp(submission_text)
+    topic_doc = nlp(quiz_title + " " + quiz_description)
+
+    similarity_score = submission_doc.similarity(topic_doc)
+
+    is_relevant = similarity_score >= threshold
+    return is_relevant, similarity_score
+
+def send_to_copilot(submission_text, criteria, topic_description):
+    """
+    Sends the submission text to the Copilot API for grading and feedback.
+    """
+    try:
+        # Form the prompt to check for topic relevance
+        prompt = (
+            f"Please review the student's essay based on the following grading criteria:\n\n"
+            f"{criteria}\n\n"
+            f"Also, check if the essay is aligned with the topic description: '{topic_description}'.\n"
+            f"If the essay is off-topic, provide feedback and give a grade of 0.\n\n"
+            f"At the end of your feedback, include the sentence 'Your grade is X' where X is the grade you assign.\n\n"
+            f"Student's Submission:\n{submission_text}\n"
+        )
+
+        response = requests.post(COPILOT_API_URL, json={
+            'message': prompt,
+        }, headers={
+            'X-RapidAPI-Key': COPILOT_API_KEY,
+            'Content-Type': 'application/json',
+        })
+
+        if response.status_code == 200:
+            response_data = response.json()
+            feedback = response_data.get('data', {}).get('message', 'No feedback provided')
+            grade = extract_numeric_grade(feedback)  # Extract grade as usual
+
+            # Check for off-topic feedback
+            if 'off-topic' in feedback.lower():
+                grade = 0.0
+                feedback += "\nGrade set to 0 due to off-topic content."
+
+            return {'grade': grade, 'feedback': feedback}
+        else:
+            return {'error': f'Failed to grade the submission. API Response: {response.text}'}
+    except requests.exceptions.RequestException as e:
+        return {'error': f'API request failed: {str(e)}'}
+
+@login_required
+def take_quiz(request, quiz_id):
+    """
+    View for students to take a quiz and submit their answers.
+    """
+    quiz = get_object_or_404(WritingQuiz, id=quiz_id)
+
+    if request.method == 'POST':
+        form = WritingQuizForm(request.POST, request.FILES)
+        if form.is_valid():
+            submission = form.save(commit=False)
+            submission.student = request.user
+            submission.quiz = quiz
+
+            if 'image' in request.FILES:
+                submission.image = request.FILES['image']
+                submission.save()
+
+                # Extract text from image
+                extracted_text = extract_text_from_image(submission.image.path)
+                logger.info(f"Extracted text: {extracted_text}")
+
+                if extracted_text:
+                    # Check relevance
+                    is_relevant, similarity_score = is_submission_on_topic(extracted_text, quiz.title, quiz.description)
+                    logger.info(f"Relevance check: {is_relevant}, Similarity Score: {similarity_score}")
+
+                    if not is_relevant:
+                        submission.grade = 0.0
+                        submission.feedback = "The submission is off-topic."
+                    else:
+                        # Send to Copilot for grading
+                        grading_result = send_to_copilot(extracted_text, quiz.criteria, quiz.description)
+                        submission.grade = grading_result.get('grade', 0)
+                        submission.feedback = grading_result.get('feedback', '')
+
+                    submission.is_graded = True
+                    submission.save()
+
+                    return redirect('quiz_result', submission_id=submission.id)
+                else:
+                    return render(request, 'take_quiz.html', {
+                        'quiz': quiz,
+                        'form': form,
+                        'error': "Failed to extract text from the image. Please upload a clear image."
+                    })
+            else:
+                return render(request, 'take_quiz.html', {
+                    'quiz': quiz,
+                    'form': form,
+                    'error': "Please upload an image of your essay."
+                })
+    else:
+        form = WritingQuizForm()
+
+    return render(request, 'take_quiz.html', {'quiz': quiz, 'form': form})
