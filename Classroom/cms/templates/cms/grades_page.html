@@ -251,7 +251,8 @@
     <!-- Grades Content -->
     <section class="course-content">
       <h2>Grades</h2>
-      {% if grades %}
+      {% for submission in submissions %}
+      {% if grades or submission.is_confirmed %}
         <table class="grades-table">
           <thead>
             <tr>
@@ -262,13 +263,13 @@
           </thead>
           <tbody>
             {% for grade in grades %}
-            {% for submission in submissions %}
-            {% if submission.is_confirmed == True %}
+            
+         
               <tr>
                 <td>{{ grade.subject }}</td>
                 <td>{{ grade.score }}%</td>
                 <td>
-                  {% if grade.score >= 70 %}
+                  {% if grade.score >= 60 %}
                     <span style="color: green;">Pass</span>
                   {% else %}
                     <span style="color: red;">Fail</span>
