@@ -77,7 +77,7 @@ def quizzes_page(request):
     quizzes = Quiz.objects.filter(
         group=student.student_class,
         is_published=True
-    ).order_by('created_at')
+    ).order_by('-created_at')
 
     # Get the IDs of quizzes the student has already submitted
     submitted_quizzes = Submission.objects.filter(student=student).values_list('quiz_id', flat=True)
