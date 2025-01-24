@@ -36,11 +36,13 @@ class Student(models.Model):
 
 class Device(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='devices')
-    device_id = models.CharField(max_length=255, unique=True)
+    user_agent = models.CharField(max_length=255)  # Browser user agent
+    cookie = models.CharField(max_length=255, unique=True)  # Unique cookie for the device
+    created_at = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.user.username} - {self.device_id}"
+        return f"{self.user.username} - {self.user_agent}"
     
 
 

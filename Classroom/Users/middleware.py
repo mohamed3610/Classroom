@@ -1,27 +1,49 @@
 # your_app/middleware.py
 from django.utils.deprecation import MiddlewareMixin
-from django.contrib.auth import logout
 from django.shortcuts import redirect
+from django.contrib.auth import logout
 from .models import Device
-from .utils import generate_device_hash
 from django.urls import reverse
-from Quiz.views import index
+import uuid
+
 class DeviceTrackingMiddleware(MiddlewareMixin):
     def process_request(self, request):
-        if request.user.is_authenticated and request.user.is_student:
-            device_hash = generate_device_hash(request)
+        if request.user.is_authenticated:
+            # Get the user's IP address
+            ip_address = request.META.get('REMOTE_ADDR')
+
+            # Get the user agent
+            user_agent = request.META.get('HTTP_USER_AGENT', '')
+
+            # Get or create a unique cookie for the device
+            device_cookie = request.COOKIES.get('device_id')
+            if not device_cookie:
+                device_cookie = str(uuid.uuid4())  # Generate a unique ID for the device
+
+            # Check if the device is already registered
             user_devices = Device.objects.filter(user=request.user)
 
-            if not user_devices.filter(device_id=device_hash).exists():
+            if not user_devices.filter(cookie=device_cookie).exists():
                 if user_devices.count() >= 3:
                     # Log the user out if they exceed the device limit
                     logout(request)
                     return redirect('device-limit-reached')
 
                 # Register the new device
-                Device.objects.create(user=request.user, device_id=device_hash)
+                Device.objects.create(
+                    user=request.user,
+                    ip_address=ip_address,
+                    user_agent=user_agent,
+                    cookie=device_cookie,
+                )
 
+            # Set the device cookie in the response
+            request.device_cookie = device_cookie
 
+    def process_response(self, request, response):
+        if hasattr(request, 'device_cookie'):
+            response.set_cookie('device_id', request.device_cookie, max_age=365*24*60*60)  # 1 year
+        return response
 
 class EnrollmentCheckMiddleware:
     def __init__(self, get_response):

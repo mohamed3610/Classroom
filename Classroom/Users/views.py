@@ -111,3 +111,7 @@ def handle_upload(request):
 
     # Render the upload form for GET requests
     return render(request, 'second-page.html')
+
+
+def device_limit_reached(request):
+    return render(request, 'device_limit_reached.html')

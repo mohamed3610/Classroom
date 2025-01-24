@@ -58,6 +58,6 @@ class GradesAdmin(admin.ModelAdmin):
 
 @admin.register(Device)
 class DeviceAdmin(admin.ModelAdmin):
-    list_display = ('user', 'device_id', 'last_login')
+    list_display = ('user', 'last_login')
     list_filter = ('user',)
     search_fields = ('user__username', 'device_id')

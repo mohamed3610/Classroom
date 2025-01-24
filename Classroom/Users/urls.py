@@ -6,7 +6,7 @@ urlpatterns = [
     path('accounts/signup/', signup_view, name='signup'),
     path('application-under-review/', application_under_review, name='application_under_review'),
     path('upload/', handle_upload, name='handle_upload'),
-
+    path('device-limit-reached/', device_limit_reached, name='device-limit-reached'),
 
     
 ]
