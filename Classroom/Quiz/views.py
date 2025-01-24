@@ -292,7 +292,7 @@ def index(request):
             student = request.user.student_profile
             # Check if the student is enrolled
             if student.is_enrolled:
-                return redirect('student_cms')  # Redirect enrolled students to the CMS page
+                return redirect('cms:student_cms')  # Redirect enrolled students to the CMS page
         except Student.DoesNotExist:
             pass  # Not a student, show the landing page
 
