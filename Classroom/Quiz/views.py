@@ -39,7 +39,7 @@ def take_quiz(request, quiz_id):
                         extracted_text = extract_text_from_image(submission.image.path)
                         if extracted_text:
                             # Grade the essay
-                            grading_result = send_to_copilot(extracted_text, quiz.description)
+                            grading_result = send_to_copilot(extracted_text, quiz.description , quiz.instructions)
                             submission.extracted_text = extracted_text
                             submission.grade = grading_result.get('grade', 0)
                             submission.feedback = grading_result.get('feedback', '')

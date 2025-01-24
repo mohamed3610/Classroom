@@ -53,7 +53,7 @@ def extract_numeric_grade(feedback):
     return 0.0
 
 
-def send_to_copilot(submission_text, criteria, topic_description):
+def send_to_copilot(submission_text, , topic_description , criteria):
     """
     Sends the submission text to the Copilot API for grading and feedback.
     """
