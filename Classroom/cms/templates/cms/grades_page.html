@@ -269,11 +269,12 @@
               <i class="fas fa-chart-line"></i> <!-- Icon for grades -->
               <p>{{ grade.quiz_or_exam_name }}: <strong>{{ grade.score }}%</strong></p>
             </div>
+            {% endif %}
             {% endfor %}
           {% endfor %}
         {% else %}
           <p>No grades available.</p>
-          {% endif %}
+          
         {% endif %}
       </div>
     </section>
