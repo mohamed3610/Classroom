@@ -24,6 +24,7 @@ def take_quiz(request, quiz_id):
         if form.is_valid():
             try:
                 with transaction.atomic():
+                    # Process each uploaded image
                     for image in request.FILES.getlist('images'):
                         submission = Submission(
                             student=student,
@@ -32,7 +33,7 @@ def take_quiz(request, quiz_id):
                         )
                         submission.save()
 
-                        # Extract text from image
+                        # Extract text from the image
                         extracted_text = extract_text_from_image(submission.image.path)
                         if extracted_text:
                             # Grade the essay
@@ -43,7 +44,7 @@ def take_quiz(request, quiz_id):
                             submission.is_graded = True
                             submission.save()
 
-                            # Save to Grades model
+                            # Save the grade to the Grades model
                             Grades.objects.create(
                                 student=student,
                                 subject=quiz.title,
@@ -55,15 +56,20 @@ def take_quiz(request, quiz_id):
 
                     return redirect('quiz_result', submission_id=submission.id)
             except Exception as e:
+                # Log the error for debugging
+                print(f"Error processing submission: {e}")
                 return render(request, 'take_quiz.html', {
                     'quiz': quiz,
                     'form': form,
-                    'error': f"Error processing submission: {str(e)}"
+                    'error': "An error occurred while processing your submission. Please try again."
                 })
     else:
         form = EssaySubmissionForm()
 
-    return render(request, 'take_quiz.html', {'quiz': quiz, 'form': form})
+    return render(request, 'take_quiz.html', {
+        'quiz': quiz,
+        'form': form,
+    })
 
 @login_required
 def quiz_result(request, submission_id):
@@ -76,7 +82,9 @@ def quiz_result(request, submission_id):
         return redirect('landing_page')
 
     submission = get_object_or_404(Submission, id=submission_id, student=student)
-    return render(request, 'quiz_result.html', {'submission': submission})
+    return render(request, 'quiz_result.html', {
+        'submission': submission,
+    })
 def index(request):
     # Check if the user is authenticated
     if request.user.is_authenticated:
