@@ -24,7 +24,7 @@ def take_quiz(request, quiz_id):
         if form.is_valid():
             try:
                 with transaction.atomic():
-                    images = form.cleaned_data['images']  # Get validated images
+                    images = form.cleaned_data['images']
                     for image in images:
                         submission = Submission(
                             student=student,
@@ -56,8 +56,7 @@ def take_quiz(request, quiz_id):
 
                     return redirect('quiz_result', submission_id=submission.id)
             except Exception as e:
-                # Log the error for debugging
-                print(f"Error processing submission: {e}")
+                logger.error(f"Error processing submission: {e}")
                 return render(request, 'take_quiz.html', {
                     'quiz': quiz,
                     'form': form,

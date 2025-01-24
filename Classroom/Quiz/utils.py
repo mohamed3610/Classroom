@@ -48,10 +48,20 @@ def extract_text_from_image(image_path):
         if os.path.exists(processed_path):
             os.remove(processed_path)
 
+import http.client
+import json
+import logging
+
+# Configure logging
+logger = logging.getLogger(__name__)
+
 def grade_essay(essay_text, topic_description):
+    """
+    Grade an essay using the RapidAPI Language Tutor API.
+    """
     if not essay_text.strip():
         return {'grade': 0.0, 'feedback': 'No text extracted for grading'}
-    
+
     conn = http.client.HTTPSConnection("ai-language-tutor-learn-english-spanish-arabic-hindi.p.rapidapi.com")
     payload = json.dumps({
         "topic": topic_description,
@@ -60,26 +70,42 @@ def grade_essay(essay_text, topic_description):
         "level": "intermediate",
         "situationType": "casual"
     })
-    
+
     headers = {
-        'x-rapidapi-key': AI_TUTOR_API_KEY,
+        'x-rapidapi-key': "4b8c24a644mshf0872526fa20c27p1e77c6jsn4d11578ae49c",  # Replace with your API key
         'x-rapidapi-host': "ai-language-tutor-learn-english-spanish-arabic-hindi.p.rapidapi.com",
         'Content-Type': "application/json"
     }
-    
+
     try:
+        # Make the API request
         conn.request("POST", "/conversation?noqueue=1", payload, headers)
         res = conn.getresponse()
-        data = json.loads(res.read().decode("utf-8"))
-        feedback = data.get("response", "No feedback available")
-        
-        # Simplified grading logic
-        grade = min(len(feedback) / 100, 1.0) * 100
-        if 'off-topic' in feedback.lower():
-            grade = 0.0
-            feedback += "\nGrade set to 0 due to off-topic content."
-            
-        return {'grade': round(grade, 2), 'feedback': feedback}
+
+        # Check if the request was successful
+        if res.status == 200:
+            data = json.loads(res.read().decode("utf-8"))
+            feedback = data.get("response", "No feedback available")
+
+            # Simplified grading logic
+            grade = min(len(feedback) / 100, 1.0) * 100
+            if 'off-topic' in feedback.lower():
+                grade = 0.0
+                feedback += "\nGrade set to 0 due to off-topic content."
+
+            return {'grade': round(grade, 2), 'feedback': feedback}
+        else:
+            logger.error(f"API Error: {res.status} - {res.reason}")
+            return {'grade': 0.0, 'feedback': f'Grading system error: {res.reason}'}
+
+    except http.client.HTTPException as e:
+        logger.error(f"HTTP Error: {e}")
+        return {'grade': 0.0, 'feedback': 'Connection to grading system failed'}
+    except json.JSONDecodeError as e:
+        logger.error(f"JSON Decode Error: {e}")
+        return {'grade': 0.0, 'feedback': 'Invalid response from grading system'}
     except Exception as e:
-        logger.error(f"Grading API failed: {e}")
-        return {'grade': 0.0, 'feedback': f'Grading system error {e}'}
+        logger.error(f"Unexpected Error: {e}")
+        return {'grade': 0.0, 'feedback': f'Grading system error: {str(e)}'}
+    finally:
+        conn.close()  # Ensure the connection is closed
