@@ -52,7 +52,7 @@ def extract_text_from_image(image_path):
 # Configure logging
 logger = logging.getLogger(__name__)
 
-def grade_easy(essay_text, topic_description):
+def grade_essay(essay_text, topic_description):
     """
     Grade an essay using a simplified approach with the Copilot API.
     """
