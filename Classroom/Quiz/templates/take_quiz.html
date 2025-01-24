@@ -313,10 +313,17 @@
       <form method="post" id="quiz-form" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-group">
-          <input type="file" name="image" accept="image/*" multiple required>
+            {{ form.images.label_tag }}
+            {{ form.images }}
+            {% if form.images.errors %}
+                <div class="error-message">
+                    {{ form.images.errors }}
+                </div>
+            {% endif %}
+            <small class="form-text text-muted">{{ form.images.help_text }}</small>
         </div>
         <button type="submit">Submit</button>
-      </form>
+    </form>
     </section>
   </div>
 

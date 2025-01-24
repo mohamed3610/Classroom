@@ -24,8 +24,8 @@ def take_quiz(request, quiz_id):
         if form.is_valid():
             try:
                 with transaction.atomic():
-                    # Process each uploaded image
-                    for image in request.FILES.getlist('images'):
+                    images = form.cleaned_data['images']  # Get validated images
+                    for image in images:
                         submission = Submission(
                             student=student,
                             quiz=quiz,
@@ -70,7 +70,6 @@ def take_quiz(request, quiz_id):
         'quiz': quiz,
         'form': form,
     })
-
 @login_required
 def quiz_result(request, submission_id):
     try:
