@@ -28,6 +28,8 @@ class Submission(models.Model):
     feedback = models.TextField(blank=True, null=True)
     submitted_at = models.DateTimeField(auto_now_add=True)
     is_graded = models.BooleanField(default=False)
+    is_confirmed = models.BooleanField(default=False)  # New field
+
 
     def __str__(self):
         return f"{self.student.user.username} - {self.quiz.title}"

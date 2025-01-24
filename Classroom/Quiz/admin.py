@@ -16,11 +16,12 @@ class QuizAdmin(admin.ModelAdmin):
 
 @admin.register(Submission)
 class SubmissionAdmin(admin.ModelAdmin):
-    list_display = ('student', 'quiz', 'submitted_at', 'grade', 'is_graded')
-    list_filter = ('quiz', 'is_graded', 'submitted_at')
+    list_display = ('student', 'quiz', 'submitted_at', 'grade', 'is_graded' , 'is_confirmed')  # New field
+
+    list_filter = ('quiz', 'is_graded', 'is_confirmed','submitted_at')
     search_fields = ('student__user__username', 'quiz__title', 'extracted_text')
     date_hierarchy = 'submitted_at'
-    ordering = ('-submitted_at',)
+    ordering = ('submitted_at',)
     readonly_fields = ('submitted_at',)  # Prevent editing of submission time
 
     # Custom action to mark submissions as graded

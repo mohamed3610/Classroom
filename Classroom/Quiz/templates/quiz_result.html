@@ -1,15 +1,14 @@
-<h2>Original Text</h2>
-<p>{{ submission.extracted_text }}</p>
+{% extends 'base.html' %}
 
-<h2>Corrected Text</h2>
-<p>{{ submission.corrected_text }}</p>
-
-<h2>Corrections</h2>
-<ul>
-    {% for correction in submission.corrections %}
-        <li>Original: {{ correction.0 }}, Corrected: {{ correction.1 }}</li>
-    {% endfor %}
-</ul>
-
-<h2>Feedback</h2>
-<p>{{ submission.feedback }}</p>
+{% block content %}
+<div class="container">
+    <h2>Quiz Result</h2>
+    {% if message %}
+        <p>{{ message }}</p>
+    {% else %}
+        <p>Grade: {{ submission.grade }}</p>
+        <p>Feedback: {{ submission.feedback }}</p>
+    {% endif %}
+    <a href="{% url 'dashboard' %}" class="btn btn-primary">Return to Dashboard</a>
+</div>
+{% endblock %}

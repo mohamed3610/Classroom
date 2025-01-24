@@ -39,7 +39,7 @@ def take_quiz(request, quiz_id):
                         extracted_text = extract_text_from_image(submission.image.path)
                         if extracted_text:
                             # Grade the essay
-                            grading_result = send_to_copilot(extracted_text, quiz.description , quiz.instructions)
+                            grading_result = send_to_copilot(extracted_text, quiz.description, quiz.instructions)
                             submission.extracted_text = extracted_text
                             submission.grade = grading_result.get('grade', 0)
                             submission.feedback = grading_result.get('feedback', '')
@@ -56,7 +56,8 @@ def take_quiz(request, quiz_id):
                             submission.feedback = "Failed to extract text from image"
                             submission.save()
 
-                    return redirect('quiz_result', submission_id=submission.id)
+                    # Redirect to the submission success page
+                    return redirect('submission_success')
             except Exception as e:
                 logger.error(f"Error processing submission: {e}")
                 return render(request, 'take_quiz.html', {
@@ -71,7 +72,6 @@ def take_quiz(request, quiz_id):
         'quiz': quiz,
         'form': form,
     })
-
 @login_required
 def quiz_result(request, submission_id):
     try:
@@ -83,6 +83,14 @@ def quiz_result(request, submission_id):
         return redirect('landing_page')
 
     submission = get_object_or_404(Submission, id=submission_id, student=student)
+
+    # Only show the grade if the submission is confirmed by the TA
+    if not submission.is_confirmed:
+        return render(request, 'quiz_result.html', {
+            'submission': submission,
+            'message': 'Your submission is under review. Please check back later.'
+        })
+
     return render(request, 'quiz_result.html', {
         'submission': submission,
     })
@@ -100,3 +108,10 @@ def index(request):
 
     # Show the landing page for unauthenticated users or unenrolled students
     return render(request, 'index.html')
+
+@login_required
+def submission_success(request):
+    """
+    Displays a success message after the student submits their assignment.
+    """
+    return render(request, 'submission_success.html')
