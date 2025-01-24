@@ -7,8 +7,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
-     /* General Styles */
-     body {
+    /* General Styles */
+    body {
       margin: 0;
       padding: 0;
       font-family: 'Poppins', sans-serif;
@@ -233,7 +233,23 @@
   </style>
 </head>
 <body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-content">
+      <div class="sidebar-title">Shaymaa's English Classes</div>
+      <a href="{% url 'cms:grades_page' %}" class="cta-button">View Grades</a>
+      <a href="{% url 'cms:quizzes_page' %}" class="cta-button">Take Quizzes</a>
+    </div>
+    <!-- Logout Button -->
+    <form action="{% url 'logout' %}" method="post" style="width: 100%;">
+      {% csrf_token %}
+      <button type="submit" class="cta-button" style="background-color: #e63946;">Logout</button>
+    </form>
+  </div>
+
+  <!-- Main Content -->
   <div class="container">
+    <!-- Hero Section -->
     <section class="hero">
       <div class="hero-text">
         <h1>Your Grades</h1>
@@ -244,7 +260,18 @@
     <!-- Grades Content -->
     <section class="course-content">
       <h2>Grades</h2>
-      <!-- Add grades content here -->
+      <div class="course-list">
+        {% if grades %}
+          {% for grade in grades %}
+            <div class="course-item">
+              <i class="fas fa-chart-line"></i> <!-- Icon for grades -->
+              <p>{{ grade.quiz_or_exam_name }}: <strong>{{ grade.score }}%</strong></p>
+            </div>
+          {% endfor %}
+        {% else %}
+          <p>No grades available.</p>
+        {% endif %}
+      </div>
     </section>
   </div>
 </body>
