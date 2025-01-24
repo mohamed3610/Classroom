@@ -47,7 +47,7 @@
     }
 
     .sidebar-content {
-      flex-grow: 1; /* Push the logout button to the bottom */
+      flex-grow: 0.7; /* Push the logout button to the bottom */
       width: 100%;
       display: flex;
       flex-direction: column;
@@ -242,7 +242,7 @@
       <a href="{% url 'cms:quizzes_page' %}" class="cta-button">Take Quizzes</a>
     </div>
     <!-- Logout Button -->
-    <form action="{% url 'logout' %}" method="post" style="width: 100%;">
+    <form action="{% url 'logout' %}" method="post">
       {% csrf_token %}
       <button type="submit" class="cta-button" style="background-color: #e63946;">Logout</button>
     </form>
