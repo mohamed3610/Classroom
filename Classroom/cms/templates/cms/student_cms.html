@@ -46,6 +46,14 @@
       align-items: center;
     }
 
+    .sidebar-content {
+      flex-grow: 1; /* Push the logout button to the bottom */
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
     .sidebar-title {
       font-size: 1.5rem;
       font-weight: 600;
@@ -228,9 +236,11 @@
 <body>
   <!-- Sidebar -->
   <div class="sidebar">
-    <div class="sidebar-title">Shaymaa's English Classes</div>
-    <a href="{% url 'cms:grades_page' %}" class="cta-button">View Grades</a>
-    <a href="{% url 'cms:quizzes_page' %}" class="cta-button">Take Quizzes</a>
+    <div class="sidebar-content">
+      <div class="sidebar-title">Shaymaa's English Classes</div>
+      <a href="{% url 'cms:grades_page' %}" class="cta-button">View Grades</a>
+      <a href="{% url 'cms:quizzes_page' %}" class="cta-button">Take Quizzes</a>
+    </div>
     <!-- Logout Button -->
     <form action="{% url 'logout' %}" method="post" style="width: 100%;">
       {% csrf_token %}
