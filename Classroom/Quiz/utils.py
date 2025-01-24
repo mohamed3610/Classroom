@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import WritingQuiz, Submission
-from .forms import WritingQuizForm
+from .models import Quiz, Submission
+from .forms import EssaySubmissionForm
 import requests
 import re
 import spacy
@@ -110,10 +110,10 @@ def take_quiz(request, quiz_id):
     """
     View for students to take a quiz and submit their answers.
     """
-    quiz = get_object_or_404(WritingQuiz, id=quiz_id)
+    quiz = get_object_or_404(Quiz, id=quiz_id)
 
     if request.method == 'POST':
-        form = WritingQuizForm(request.POST, request.FILES)
+        form = Quiz(request.POST, request.FILES)
         if form.is_valid():
             submission = form.save(commit=False)
             submission.student = request.user
@@ -158,6 +158,6 @@ def take_quiz(request, quiz_id):
                     'error': "Please upload an image of your essay."
                 })
     else:
-        form = WritingQuizForm()
+        form = EssaySubmissionForm()
 
     return render(request, 'take_quiz.html', {'quiz': quiz, 'form': form})
