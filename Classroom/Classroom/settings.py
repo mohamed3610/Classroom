@@ -111,8 +111,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
+LOGOUT_REDIRECT_URL = 'quiz:landing_page'  # Replace 'landing_page' with the name of your landing page URL
+
+# Redirect to the student CMS after login
+LOGIN_REDIRECT_URL = 'cms:student_cms'  # Replace 'student_cms' with the name of your student CMS URL
 
 LANGUAGE_CODE = 'en-us'
 
