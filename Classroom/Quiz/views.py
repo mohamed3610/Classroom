@@ -7,6 +7,8 @@ from cms.models import Grades
 from .forms import EssaySubmissionForm
 from .utils import extract_text_from_image, send_to_copilot
 import logging
+from django.urls import reverse
+
 logger = logging.getLogger(__name__)
 
 @login_required
@@ -62,7 +64,7 @@ def take_quiz(request, quiz_id):
                             submission.save()
 
                     # Redirect to the submission success page
-                    return redirect('submission_success')
+                    return redirect(reverse('quiz_result' ,submission.pk ))
             except Exception as e:
                 logger.error(f"Error processing submission: {e}")
                 return render(request, 'take_quiz.html', {
@@ -114,9 +116,3 @@ def index(request):
     # Show the landing page for unauthenticated users or unenrolled students
     return render(request, 'index.html')
 
-@login_required
-def submission_success(request):
-    """
-    Displays a success message after the student submits their assignment.
-    """
-    return render(request, 'essay_detail.html')
