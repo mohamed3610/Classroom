@@ -1,11 +1,12 @@
 from django import forms
 
 class EssaySubmissionForm(forms.Form):
-    images = forms.FileField(
+    images = forms.MultipleFileField(
         widget=forms.FileInput(attrs={
             'multiple': True,
-            'accept': 'image/*'  # Optional: restrict to image files
+            'class': 'file-input',
+            'accept': 'image/*'
         }),
-        label="Upload images of your essay",
-        help_text="Select multiple images of your handwritten essay"
+        label="Upload Essay Images",
+        help_text="Select multiple images of your handwritten essay pages"
     )
