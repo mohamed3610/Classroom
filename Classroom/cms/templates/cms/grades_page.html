@@ -262,7 +262,7 @@
           </thead>
           <tbody>
             {% for submission in submissions %}
-              {% if submission.is_confirmed %}
+              {% if submission.is_confirmed == True %}
                 <tr>
                   <td>{{ submission.quiz.title }}</td>
                   <td>{{ submission.grade }}%</td>
