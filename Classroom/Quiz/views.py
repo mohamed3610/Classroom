@@ -64,7 +64,7 @@ def take_quiz(request, quiz_id):
                             submission.save()
 
                     # Redirect to the submission success page
-                    return redirect(reverse('quiz_result' ,submission.pk ))
+                    return redirect(reverse('quiz_result' , args = [submission.pk] ))
             except Exception as e:
                 logger.error(f"Error processing submission: {e}")
                 return render(request, 'take_quiz.html', {
