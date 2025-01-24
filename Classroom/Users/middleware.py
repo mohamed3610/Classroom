@@ -65,6 +65,8 @@ class EnrollmentCheckMiddleware:
             # Redirect unenrolled students to the "under review" page
             if not student.is_enrolled:
                 return redirect('application_under_review')
+            else:
+                return redirect('cms:student_cms')
 
         # Proceed with the request
         return self.get_response(request)
