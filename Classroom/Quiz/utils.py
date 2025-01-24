@@ -52,59 +52,52 @@ def extract_text_from_image(image_path):
 # Configure logging
 logger = logging.getLogger(__name__)
 
-def grade_essay(essay_text, topic_description):
+def grade_easy(essay_text, topic_description):
     """
-    Grade an essay using the Copilot API.
+    Grade an essay using a simplified approach with the Copilot API.
     """
     if not essay_text.strip():
         return {'grade': 0.0, 'feedback': 'No text extracted for grading'}
 
     conn = http.client.HTTPSConnection("copilot5.p.rapidapi.com")
 
-    # Prepare the payload for the Copilot API
+    # Prepare payload with explicit topic context and simpler instructions
     payload = json.dumps({
-        "message": essay_text,
-        "conversation_id": None,  # Optional: Add a conversation ID if needed
-        "tone": "BALANCED",       # Tone of the response (e.g., BALANCED, FORMAL, INFORMAL)
-        "markdown": False,        # Set to True if you want markdown formatting
-        "photo_url": None         # Optional: Add a photo URL if needed
+        "message": f"Provide a simple grade and brief feedback for this essay on '{topic_description}':\n{essay_text}",
+        "conversation_id": "easy_grading",
+        "tone": "INFORMAL",
+        "markdown": False,
+        "photo_url": None
     })
 
     headers = {
-        'x-rapidapi-key': "4b8c24a644mshf0872526fa20c27p1e77c6jsn4d11578ae49c",  # Replace with your API key
+        'x-rapidapi-key': "4b8c24a644mshf0872526fa20c27p1e77c6jsn4d11578ae49c",
         'x-rapidapi-host': "copilot5.p.rapidapi.com",
         'Content-Type': "application/json"
     }
 
     try:
-        # Make the API request
         conn.request("POST", "/copilot", payload, headers)
         res = conn.getresponse()
 
-        # Check if the request was successful
         if res.status == 200:
             data = json.loads(res.read().decode("utf-8"))
             feedback = data.get("response", "No feedback available")
 
-            # Simplified grading logic
-            grade = min(len(feedback) / 100, 1.0) * 100
-            if 'off-topic' in feedback.lower():
-                grade = 0.0
-                feedback += "\nGrade set to 0 due to off-topic content."
-
+            # Simplified grading based on positive keywords
+            grade = 85.0  # Base passing grade
+            if 'excellent' in feedback.lower():
+                grade = 95.0
+            elif 'needs improvement' in feedback.lower():
+                grade = 70.0
+                
             return {'grade': round(grade, 2), 'feedback': feedback}
         else:
             logger.error(f"API Error: {res.status} - {res.reason}")
             return {'grade': 0.0, 'feedback': f'Grading system error: {res.reason}'}
 
-    except http.client.HTTPException as e:
-        logger.error(f"HTTP Error: {e}")
-        return {'grade': 0.0, 'feedback': 'Connection to grading system failed'}
-    except json.JSONDecodeError as e:
-        logger.error(f"JSON Decode Error: {e}")
-        return {'grade': 0.0, 'feedback': 'Invalid response from grading system'}
     except Exception as e:
-        logger.error(f"Unexpected Error: {e}")
-        return {'grade': 0.0, 'feedback': f'Grading system error: {str(e)}'}
+        logger.error(f"Error in grade_easy: {e}")
+        return {'grade': 0.0, 'feedback': 'Grading error occurred'}
     finally:
-        conn.close()  # Ensure the connection is closed
+        conn.close()
