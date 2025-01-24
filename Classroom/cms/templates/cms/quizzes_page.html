@@ -287,11 +287,15 @@
                     {% if quiz.due_date %}
                         <p>Due: {{ quiz.due_date|date:"F j, Y H:i" }}</p>
                     {% endif %}
-                    
+    
                     {% if quiz.is_active %}
-                        <a href="{% url 'take_quiz' quiz.id %}" class="cta-button">
-                            Take Quiz
-                        </a>
+                        {% if quiz.id in submitted_quizzes %}
+                            <div class="expired">Already Submitted</div>
+                        {% else %}
+                            <a href="{% url 'take_quiz' quiz.id %}" class="cta-button">
+                                Take Quiz
+                            </a>
+                        {% endif %}
                     {% else %}
                         <div class="expired">Quiz Expired</div>
                     {% endif %}
@@ -300,6 +304,7 @@
         {% else %}
             <p>No quizzes available for your class.</p>
         {% endif %}
+    
     </div>
     </section>
   </div>

@@ -79,9 +79,13 @@ def quizzes_page(request):
         is_published=True
     ).order_by('created_at')
 
+    # Get the IDs of quizzes the student has already submitted
+    submitted_quizzes = Submission.objects.filter(student=student).values_list('quiz_id', flat=True)
+
     context = {
         'student': student,
         'quizzes': quizzes,
+        'submitted_quizzes': submitted_quizzes,
         'current_time': timezone.now()
     }
     return render(request, 'cms/quizzes_page.html', context)
