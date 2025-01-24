@@ -10,7 +10,6 @@ class DeviceTrackingMiddleware(MiddlewareMixin):
     def process_request(self, request):
         if request.user.is_authenticated:
             # Get the user's IP address
-            ip_address = request.META.get('REMOTE_ADDR')
 
             # Get the user agent
             user_agent = request.META.get('HTTP_USER_AGENT', '')
@@ -32,7 +31,6 @@ class DeviceTrackingMiddleware(MiddlewareMixin):
                 # Register the new device
                 Device.objects.create(
                     user=request.user,
-                    ip_address=ip_address,
                     user_agent=user_agent,
                     cookie=device_cookie,
                 )
