@@ -76,7 +76,7 @@ def quizzes_page(request):
     quizzes = Quiz.objects.filter(
         group=student.student_class,
         is_published=True
-    ).order_by('-created_at')
+    ).order_by('created_at')
 
     context = {
         'student': student,
