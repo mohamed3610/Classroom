@@ -55,7 +55,7 @@ def take_quiz(request, quiz_id):
 
                     return redirect('quiz_result', submission_id=submission.id)
             except Exception as e:
-                return render(request, 'quiz/take_quiz.html', {
+                return render(request, 'take_quiz.html', {
                     'quiz': quiz,
                     'form': form,
                     'error': f"Error processing submission: {str(e)}"
