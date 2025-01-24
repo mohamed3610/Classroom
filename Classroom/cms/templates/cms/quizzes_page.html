@@ -228,13 +228,9 @@
         box-shadow: none;
       }
 
-      .sidebar-content {
-      flex-grow: 0.9;
-      width: 70%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+      .sidebar .cta-button {
+        width: 70%;
+      }
 
       .hero, .course-content {
         margin-left: 0;
@@ -246,8 +242,11 @@
 
       .hero-text p {
         font-size: 1.1rem;
+      }
 
-    }
+      .course-list {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
