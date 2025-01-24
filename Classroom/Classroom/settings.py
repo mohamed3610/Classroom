@@ -111,7 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-LOGOUT_REDIRECT_URL = 'Quiz:landing_page'  # Replace 'landing_page' with the name of your landing page URL
+LOGOUT_REDIRECT_URL = 'landing_page'  # Replace 'landing_page' with the name of your landing page URL
 
 # Redirect to the student CMS after login
 LOGIN_REDIRECT_URL = 'cms:student_cms'  # Replace 'student_cms' with the name of your student CMS URL
