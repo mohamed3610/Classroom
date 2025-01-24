@@ -83,4 +83,4 @@ def quizzes_page(request):
         'quizzes': quizzes,
         'current_time': timezone.now()
     }
-    return render(request, 'quiz/quizzes_page.html', context)
+    return render(request, 'cms/quizzes_page.html', context)
