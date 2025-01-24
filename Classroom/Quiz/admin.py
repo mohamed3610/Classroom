@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Quiz, Submission
-import http.client
+import requests
 import json
 
 @admin.register(Quiz)
@@ -46,44 +46,36 @@ class SubmissionAdmin(admin.ModelAdmin):
 
     def send_whatsapp_notification(self, submission):
         """
-        Sends a WhatsApp text message to the guardian with the quiz title, grade, and feedback.
+        Sends a WhatsApp message to the guardian using the WhatsApp API.
         """
         guardian_whatsapp_number = submission.student.guardian_whatsapp_number
         message = (
             f"Dear {submission.student.guardian_name},\n\n"
-            f"Your ward, {submission.student.user.username}, has received the following result:\n\n"
-            f"*Quiz Title*: {submission.quiz.title}\n"
-            f"*Grade*: {submission.grade}%\n"
-            f"*Feedback*: {submission.feedback}\n\n"
+            f"Your ward, {submission.student.user.username}, has received a grade of {submission.grade}% "
+            f"for the quiz '{submission.quiz.title}'. Please check the platform for more details.\n\n"
             f"Best regards,\nShaymaa's English Classes"
         )
 
-        # Prepare the payload for the WhatsApp API
+        url = "https://whatsapp-messaging-hub.p.rapidapi.com/WhatsappSendMessage"
         payload = {
-            "number": guardian_whatsapp_number,  
-            "message": message
+            "token": "K0SBmydcX4ASHUM54sT1HuO6L1OAW+j+xcLrN+VZ2hFPV/SHnkTOpYVODr6VNMBbm7qsSrSrMduuL0PGZKxHow==",  # Replace with your actual token
+            "phone_number_or_group_id": guardian_whatsapp_number,
+            "is_group": False,
+            "message": message,
+            "quoted_message_id": "",
+            "quoted_phone_number": "",
+            "reply_privately": False,
+            "reply_privately_group_id": ""
         }
-
-        # Convert payload to JSON
-        payload_json = json.dumps(payload)
-
-        # Set up the API connection
-        conn = http.client.HTTPSConnection("whatsapp-api5.p.rapidapi.com")
         headers = {
-            'x-rapidapi-key': "4b8c24a644mshf0872526fa20c27p1e77c6jsn4d11578ae49c",  # Replace with your RapidAPI key
-            'x-rapidapi-host': "whatsapp-api5.p.rapidapi.com",
-            'Content-Type': "application/json"
+            "Content-Type": "application/json",
+            "X-RapidAPI-Key": "4b8c24a644mshf0872526fa20c27p1e77c6jsn4d11578ae49c",  # Replace with your actual API key
+            "X-RapidAPI-Host": "whatsapp-messaging-hub.p.rapidapi.com"
         }
 
         try:
-            # Make the API request
-            conn.request("POST", "/api/v2/send_text/", payload_json, headers)
-            res = conn.getresponse()
-            data = res.read()
-
-            # Log the response
-            print(f"WhatsApp API Response: {data.decode('utf-8')}")
-        except Exception as e:
+            response = requests.post(url, headers=headers, data=json.dumps(payload))
+            response.raise_for_status()  # Raise an exception for HTTP errors
+            print(f"WhatsApp message sent to {guardian_whatsapp_number}")
+        except requests.exceptions.RequestException as e:
             print(f"Failed to send WhatsApp message: {e}")
-        finally:
-            conn.close()
