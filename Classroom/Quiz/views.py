@@ -26,7 +26,7 @@ def take_quiz(request, quiz_id):
     # Check if the student has already submitted this quiz
     existing_submission = Submission.objects.filter(student=student, quiz=quiz).first()
     if existing_submission:
-        return redirect('already_submitted')  # Redirect to a page indicating they've already submitted
+        return redirect(reverse('quiz_result' , args = [submission.pk]))  # Redirect to a page indicating they've already submitted
 
     if request.method == 'POST':
         form = EssaySubmissionForm(request.POST, request.FILES)
