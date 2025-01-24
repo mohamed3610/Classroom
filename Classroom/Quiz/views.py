@@ -88,7 +88,7 @@ def quiz_result(request, submission_id):
     if not submission.is_confirmed:
         return render(request, 'quiz_result.html', {
             'submission': submission,
-            'message': 'Your submission is under review. Please check back later.'
+            'message': 'Your submission is getting graded. Please check back later.'
         })
 
     return render(request, 'quiz_result.html', {
