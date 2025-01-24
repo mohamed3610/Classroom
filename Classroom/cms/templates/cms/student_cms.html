@@ -72,6 +72,18 @@
       text-align: center;
     }
 
+    .sidebar .cta-button[type="submit"] {
+      background-color: #e63946; /* Red color for logout button */
+      border: none;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .sidebar .cta-button[type="submit"]:hover {
+      background-color: #d62828; /* Darker red on hover */
+      transform: translateY(-3px);
+    }
+
     .sidebar .cta-button:hover {
       background-color: #f4a261;
       transform: translateY(-3px);
@@ -190,22 +202,10 @@
         padding: 10px;
         box-shadow: none;
       }
+
       .sidebar .cta-button {
-      display: block;
-      width: 70%;
-      background-color: #3f4c61;
-      color: white;
-      padding: 12px 20px;
-      text-transform: uppercase;
-      border: none;
-      border-radius: 5px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background-color 0.3s ease, transform 0.3s ease;
-      margin-bottom: 10px;
-      text-align: center;
-    }
+        width: 70%;
+      }
 
       .hero, .course-content {
         margin-left: 0;
@@ -231,6 +231,11 @@
     <div class="sidebar-title">Shaymaa's English Classes</div>
     <a href="{% url 'cms:grades_page' %}" class="cta-button">View Grades</a>
     <a href="{% url 'cms:quizzes_page' %}" class="cta-button">Take Quizzes</a>
+    <!-- Logout Button -->
+    <form action="{% url 'logout' %}" method="post" style="width: 100%;">
+      {% csrf_token %}
+      <button type="submit" class="cta-button" style="background-color: #e63946;">Logout</button>
+    </form>
   </div>
 
   <!-- Main Content -->
