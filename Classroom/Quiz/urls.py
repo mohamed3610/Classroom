@@ -10,5 +10,7 @@ urlpatterns = [
     path('' , views.index , name="landing_page"),
     path('take_quiz/<int:quiz_id>/', views.take_quiz, name='take_quiz'),
     path('quiz_result/<int:submission_id>/', views.quiz_result, name='quiz_result'),
+    path('success' , views.submission_success , name = "submission_success")
+    
 
 ]
