@@ -119,9 +119,9 @@ LOGIN_REDIRECT_URL = 'cms:student_cms'  # Replace 'student_cms' with the name of
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Cairo'  # Egypt's time zone
 
 USE_I18N = True
-
 USE_TZ = True
 
 AUTH_USER_MODEL = 'Users.CustomUser' 
