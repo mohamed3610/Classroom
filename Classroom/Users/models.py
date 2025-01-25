@@ -37,7 +37,7 @@ class Student(models.Model):
 class Device(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='devices')
     user_agent = models.CharField(max_length=255)  # Browser user agent
-    cookie = models.CharField(max_length=255, unique=True)  # Unique cookie for the device
+    cookie = models.CharField(max_length=255)  # Unique cookie for the device
     created_at = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True)
 
