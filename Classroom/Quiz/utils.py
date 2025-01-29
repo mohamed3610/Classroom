@@ -93,10 +93,10 @@ def take_quiz(request, quiz_id):
                     submission = Submission.objects.create(
                         student=student,
                         quiz=quiz,
-                        pdf_file=pdf_file
+                        image=pdf_file
                     )
 
-                    extracted_text = extract_text_from_pdf(submission.pdf_file.path)
+                    extracted_text = extract_text_from_pdf(submission.image.path)
                     if not extracted_text:
                         submission.feedback = "Failed to extract text from PDF"
                         submission.save()

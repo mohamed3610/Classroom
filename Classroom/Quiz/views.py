@@ -39,12 +39,12 @@ def take_quiz(request, quiz_id):
                     submission = Submission(
                         student=student,
                         quiz=quiz,
-                        pdf_file=pdf_file
+                        image=pdf_file
                     )
                     submission.save()
 
                     # Extract text from PDF
-                    extracted_text = extract_text_from_pdf(submission.pdf_file.path)
+                    extracted_text = extract_text_from_pdf(submission.image.path)
                     if extracted_text:
                         # Grade the essay
                         grading_result = send_to_copilot(extracted_text, quiz.description, quiz.instructions)
