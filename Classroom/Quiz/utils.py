@@ -144,9 +144,7 @@ def send_to_copilot(submission_text, topic_description, criteria):
             feedback = response_data.get('data', {}).get('message', 'No feedback')
             grade = extract_numeric_grade(feedback)
 
-            if 'off-topic' in feedback.lower():
-                grade = 0.0
-                feedback += "\nGrade set to 0 due to off-topic content."
+            
 
             return {'grade': grade, 'feedback': feedback}
         return {'error': f'API Error: {response.text}'}
