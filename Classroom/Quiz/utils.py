@@ -3,32 +3,108 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from .models import Quiz, Submission
+# views.py
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.db import transaction
+from .models import Quiz, Submission
 from cms.models import Grades
 from .forms import EssaySubmissionForm
 import PyPDF2
 import requests
 import re
 import logging
+import tempfile
+from pdf2image import convert_from_path
+import pytesseract
 
 logger = logging.getLogger(__name__)
 
-# API Configuration
-COPILOT_API_URL = 'https://copilot5.p.rapidapi.com/copilot'
-COPILOT_API_KEY = '4b8c24a644mshf0872526fa20c27p1e77c6jsn4d11578ae49c'
+# OCR Configuration
+OCR_API_URL = "https://image-to-text30.p.rapidapi.com/api/rapidapi/image-to-text"
+OCR_API_KEY = "4b8c24a644mshf0872526fa20c27p1e77c6jsn4d11578ae49c"
 
 def extract_text_from_pdf(pdf_path):
-    """Extracts text from a PDF file using PyPDF2"""
+    """Extracts text from image-based PDF using OCR"""
     try:
         text = ""
-        with open(pdf_path, 'rb') as file:
-            reader = PyPDF2.PdfReader(file)
-            for page in reader.pages:
-                text += page.extract_text() or ""
-        return text if text.strip() else None
+        
+        # Convert PDF to images
+        images = convert_from_path(pdf_path, poppler_path=r'C:\path\to\poppler-xx\bin')  # Update poppler path
+        
+        # OCR each image
+        for i, image in enumerate(images):
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.jpg') as temp_image:
+                image.save(temp_image.name, 'JPEG')
+                
+                # Use OCR API
+                headers = {'X-RapidAPI-Key': OCR_API_KEY}
+                files = {'image': open(temp_image.name, 'rb')}
+                
+                response = requests.post(OCR_API_URL, headers=headers, files=files)
+                if response.status_code == 200:
+                    text += response.json().get('text', '') + "\n"
+                
+        return text.strip() if text else None
+        
     except Exception as e:
-        logger.error(f"PDF text extraction failed: {e}")
+        logger.error(f"PDF OCR failed: {e}")
         return None
 
+# Rest of the code remains the same as in your previous version...
+
+@login_required
+def take_quiz(request, quiz_id):
+    """Handle PDF submission and grading"""
+    try:
+        student = request.user.student_profile
+    except Student.DoesNotExist:
+        return redirect('landing_page')
+
+    if not student.is_enrolled:
+        return redirect('landing_page')
+
+    quiz = get_object_or_404(Quiz, id=quiz_id, is_published=True)
+    existing_submission = Submission.objects.filter(student=student, quiz=quiz).first()
+    
+    if existing_submission:
+        return redirect('quiz_result', submission_id=existing_submission.pk)
+
+    if request.method == 'POST':
+        form = EssaySubmissionForm(request.POST, request.FILES)
+        if form.is_valid():
+            try:
+                with transaction.atomic():
+                    pdf_file = form.cleaned_data['pdf_file']
+                    submission = Submission.objects.create(
+                        student=student,
+                        quiz=quiz,
+                        image=pdf_file  # Make sure your model has pdf_file field
+                    )
+
+                    extracted_text = extract_text_from_pdf(submission.image.path)
+                    if not extracted_text:
+                        submission.feedback = "Failed to extract text from PDF"
+                        submission.save()
+                        return render(request, 'take_quiz.html', {
+                            'quiz': quiz,
+                            'form': form,
+                            'error': "Failed to extract text from handwritten PDF"
+                        })
+
+                    # Rest of grading logic remains the same...
+                    
+            except Exception as e:
+                logger.error(f"Submission error: {e}")
+                return render(request, 'take_quiz.html', {
+                    'quiz': quiz,
+                    'form': form,
+                    'error': "Submission processing failed"
+                })
+    else:
+        form = EssaySubmissionForm()
+
+    return render(request, 'take_quiz.html', {'quiz': quiz, 'form': form})
 def extract_numeric_grade(feedback):
     """Extracts the grade from feedback text using regex"""
     match = re.search(r"Your grade is\s*(\d+\.?\d*)", feedback, re.IGNORECASE)
