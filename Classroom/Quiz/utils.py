@@ -13,6 +13,7 @@ import re
 import logging
 import tempfile
 from pdf2image import convert_from_path
+from django.conf import settings
 import pytesseract
 
 logger = logging.getLogger(__name__)
@@ -73,11 +74,11 @@ def take_quiz(request, quiz_id):
                     submission = Submission.objects.create(
                         student=student,
                         quiz=quiz,
-                        pdf_file=form.cleaned_data['pdf_file']
+                        image=form.cleaned_data['pdf_file']
                     )
                     
                     # Extract text using OCR
-                    extracted_text = extract_text_from_pdf(submission.pdf_file.path)
+                    extracted_text = extract_text_from_pdf(submission.image.path)
                     
                     if not extracted_text:
                         submission.feedback = "Failed to extract text from PDF"
