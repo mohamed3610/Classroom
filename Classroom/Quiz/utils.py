@@ -24,33 +24,82 @@ OCR_API_KEY = "4b8c24a644mshf0872526fa20c27p1e77c6jsn4d11578ae49c"
 COPILOT_API_URL = 'https://copilot5.p.rapidapi.com/copilot'
 COPILOT_API_KEY = '4b8c24a644mshf0872526fa20c27p1e77c6jsn4d11578ae49c'
 def extract_text_from_pdf(pdf_path):
-    """Extracts text from image-based PDF using OCR"""
+    """Extract text from image-based PDF using Tesseract OCR"""
     try:
         text = ""
         
         # Convert PDF to images
-        images = convert_from_path(pdf_path, poppler_path=r'C:\path\to\poppler-xx\bin')  # Update poppler path
+        images = convert_from_path(
+            pdf_path,
+            poppler_path=settings.POPPLER_PATH,
+            dpi=300  # Higher DPI for better OCR accuracy
+        )
         
-        # OCR each image
+        # Process each image with OCR
         for i, image in enumerate(images):
-            with tempfile.NamedTemporaryFile(delete=False, suffix='.jpg') as temp_image:
-                image.save(temp_image.name, 'JPEG')
-                
-                # Use OCR API
-                headers = {'X-RapidAPI-Key': OCR_API_KEY}
-                files = {'image': open(temp_image.name, 'rb')}
-                
-                response = requests.post(OCR_API_URL, headers=headers, files=files)
-                if response.status_code == 200:
-                    text += response.json().get('text', '') + "\n"
-                
+            # Preprocess image
+            image = image.convert('L')  # Convert to grayscale
+            image = image.point(lambda x: 0 if x < 128 else 255)  # Increase contrast
+            
+            # Use pytesseract to extract text
+            page_text = pytesseract.image_to_string(
+                image,
+                config='--psm 6 -l eng'  # PSM 6: Assume uniform block of text
+            )
+            text += page_text + "\n"
+        
         return text.strip() if text else None
         
     except Exception as e:
         logger.error(f"PDF OCR failed: {e}")
         return None
 
-# Rest of the code remains the same as in your previous version...
+@login_required
+def take_quiz(request, quiz_id):
+    """Handle PDF submission and grading"""
+    try:
+        student = request.user.student_profile
+    except Student.DoesNotExist:
+        return redirect('landing_page')
+
+    quiz = get_object_or_404(Quiz, id=quiz_id, is_published=True)
+    
+    if request.method == 'POST':
+        form = EssaySubmissionForm(request.POST, request.FILES)
+        if form.is_valid():
+            try:
+                with transaction.atomic():
+                    # Save PDF file
+                    submission = Submission.objects.create(
+                        student=student,
+                        quiz=quiz,
+                        pdf_file=form.cleaned_data['pdf_file']
+                    )
+                    
+                    # Extract text using OCR
+                    extracted_text = extract_text_from_pdf(submission.pdf_file.path)
+                    
+                    if not extracted_text:
+                        submission.feedback = "Failed to extract text from PDF"
+                        submission.save()
+                        return render(request, 'take_quiz.html', {
+                            'quiz': quiz,
+                            'form': form,
+                            'error': "Could not read handwritten content. Please ensure: \n1. Clear handwriting\n2. Good lighting\n3. Flat page photo"
+                        })
+                    
+                    # Grading logic...
+                    return redirect('quiz_result', submission_id=submission.pk)
+                    
+            except Exception as e:
+                logger.error(f"Submission error: {e}")
+                return render(request, 'take_quiz.html', {
+                    'quiz': quiz,
+                    'form': form,
+                    'error': "Error processing your submission. Please try again."
+                })
+    
+    return render(request, 'take_quiz.html', {'quiz': quiz, 'form': EssaySubmissionForm()})
 
 @login_required
 def take_quiz(request, quiz_id):
