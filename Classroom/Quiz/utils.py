@@ -1,14 +1,11 @@
-# views.py
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.db import transaction
-from .models import Quiz, Submission
+
 # views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from .models import Quiz, Submission
 from cms.models import Grades
+from Users.models import Student
 from .forms import EssaySubmissionForm
 import PyPDF2
 import requests
@@ -24,6 +21,8 @@ logger = logging.getLogger(__name__)
 OCR_API_URL = "https://image-to-text30.p.rapidapi.com/api/rapidapi/image-to-text"
 OCR_API_KEY = "4b8c24a644mshf0872526fa20c27p1e77c6jsn4d11578ae49c"
 
+COPILOT_API_URL = 'https://copilot5.p.rapidapi.com/copilot'
+COPILOT_API_KEY = '4b8c24a644mshf0872526fa20c27p1e77c6jsn4d11578ae49c'
 def extract_text_from_pdf(pdf_path):
     """Extracts text from image-based PDF using OCR"""
     try:
