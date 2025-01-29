@@ -22,7 +22,7 @@ class Quiz(models.Model):
 class Submission(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='submissions')
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='submissions')
-    image = models.ImageField(upload_to='submissions/')
+    image = models.FileField(upload_to='submissions/')
     extracted_text = models.TextField(blank=True, null=True)
     grade = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
     feedback = models.TextField(blank=True, null=True)

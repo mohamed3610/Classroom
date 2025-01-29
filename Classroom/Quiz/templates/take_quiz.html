@@ -313,15 +313,15 @@
       <form method="post" id="quiz-form" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-group">
-            {{ form.images.label_tag }}
-            {{ form.images }}
-            {% if form.images.errors %}
-                <div class="error-message">
-                    {{ form.images.errors }}
-                </div>
-            {% endif %}
-            <small class="form-text text-muted">{{ form.images.help_text }}</small>
-        </div>
+          {{ form.pdf_file.label_tag }}
+          {{ form.pdf_file }}
+          {% if form.pdf_file.errors %}
+              <div class="error-message">
+                  {{ form.pdf_file.errors }}
+              </div>
+          {% endif %}
+          <small class="form-text text-muted">{{ form.pdf_file.help_text }}</small>
+      </div>
         <button type="submit">Submit</button>
     </form>
     </section>

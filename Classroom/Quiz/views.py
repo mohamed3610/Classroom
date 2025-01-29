@@ -5,7 +5,7 @@ from .models import Quiz, Submission
 from Users.models import Student
 from cms.models import Grades
 from .forms import EssaySubmissionForm
-from .utils import extract_text_from_image, send_to_copilot
+from .utils import extract_text_from_pdf, send_to_copilot
 import logging
 from django.urls import reverse
 
@@ -23,48 +23,48 @@ def take_quiz(request, quiz_id):
 
     quiz = get_object_or_404(Quiz, id=quiz_id, is_published=True)
 
-    # Check if the student has already submitted this quiz
+    # Check existing submission
     existing_submission = Submission.objects.filter(student=student, quiz=quiz).first()
     if existing_submission:
-        return redirect(reverse('quiz_result' , args = [submission.pk]))  # Redirect to a page indicating they've already submitted
+        return redirect(reverse('quiz_result', args=[existing_submission.pk]))
 
     if request.method == 'POST':
         form = EssaySubmissionForm(request.POST, request.FILES)
         if form.is_valid():
             try:
                 with transaction.atomic():
-                    images = form.cleaned_data['images']
-                    for image in images:
-                        submission = Submission(
-                            student=student,
-                            quiz=quiz,
-                            image=image
-                        )
+                    pdf_file = form.cleaned_data['pdf_file']
+                    
+                    # Create submission with PDF
+                    submission = Submission(
+                        student=student,
+                        quiz=quiz,
+                        pdf_file=pdf_file
+                    )
+                    submission.save()
+
+                    # Extract text from PDF
+                    extracted_text = extract_text_from_pdf(submission.pdf_file.path)
+                    if extracted_text:
+                        # Grade the essay
+                        grading_result = send_to_copilot(extracted_text, quiz.description, quiz.instructions)
+                        submission.extracted_text = extracted_text
+                        submission.grade = grading_result.get('grade', 0)
+                        submission.feedback = grading_result.get('feedback', '')
+                        submission.is_graded = True
                         submission.save()
 
-                        # Extract text from the image
-                        extracted_text = extract_text_from_image(submission.image.path)
-                        if extracted_text:
-                            # Grade the essay
-                            grading_result = send_to_copilot(extracted_text, quiz.description, quiz.instructions)
-                            submission.extracted_text = extracted_text
-                            submission.grade = grading_result.get('grade', 0)
-                            submission.feedback = grading_result.get('feedback', '')
-                            submission.is_graded = True
-                            submission.save()
+                        # Save to Grades
+                        Grades.objects.create(
+                            student=student,
+                            subject=quiz.title,
+                            score=submission.grade
+                        )
+                    else:
+                        submission.feedback = "Failed to extract text from PDF"
+                        submission.save()
 
-                            # Save the grade to the Grades model
-                            Grades.objects.create(
-                                student=student,
-                                subject=quiz.title,
-                                score=submission.grade
-                            )
-                        else:
-                            submission.feedback = "Failed to extract text from image"
-                            submission.save()
-
-                    # Redirect to the submission success page
-                    return redirect(reverse('quiz_result' , args = [submission.pk] ))
+                    return redirect(reverse('quiz_result', args=[submission.pk]))
             except Exception as e:
                 logger.error(f"Error processing submission: {e}")
                 return render(request, 'take_quiz.html', {
